@@ -1,0 +1,23 @@
+- Create root namespace x
+- Ask Congiu init.call(this) vs init(); x
+- Setup Jasmine
+- Shuffle default cards
+- Display randomly on grid
+- When a card is selected and no other cards are displayed, leave it fliped up
+- When a second card is selected check if the previous card is the same
+	- If the two cards are the same, keep them visible 
+	- Otherwise hide them
+- CSS external file
+- Minimize risk of CSS class clashes
+- Introduce grunt or gulp to concatenate, minified, zipped
+- Create documentation
+- Create Jasmine tests
+
+- Allow the user to select his own pictures
+- Validate user input (minimum card number, too many cards)
+- Insert a timer
+- Configurable number of cards to display on the grid
+- Persist in localStorage (score value..)  
+- Pick the number of copies
+- Solo or two player game
+- Allow multiple instances of GameManager
