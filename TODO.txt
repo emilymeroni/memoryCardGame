@@ -7,8 +7,8 @@
 - When a second card is selected check if the previous card is the same
 	- If the two cards are the same, keep them visible 
 	- Otherwise hide them
-- CSS external file
-- Minimize risk of CSS class clashes
+- CSS external file x
+- Minimize risk of CSS class clashes x
 - Introduce grunt or gulp to concatenate, minified, zipped
 - Create documentation
 - Create Jasmine tests
