@@ -6,5 +6,5 @@ memoryCardGame.Card = function(){
 	function setImage(image){
 		this.image = image;
 	}
-}
+};
 

@@ -1,5 +1,7 @@
 memoryCardGame.GameManager = function(){
 
+	'use strict';
+
 	var CONST = {
 		CARD_COPIES: 2,
 		DEFAULT_IMAGES: [
@@ -39,24 +41,24 @@ memoryCardGame.GameManager = function(){
 
 		changeImagePosition();
 		return sameCards;
-	}
+	};
 
 	var changeImagePosition = function(){
 		imagePosition++;
-	}
+	};
 
 	var shuffleCards = function(cards){
 		cards = cards.sort(function() {
 			return 0.5 - Math.random();
 		});
 		return cards;
-	}
+	};
 
 	var getImage = function(){
 		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
-	}
+	};
 
 	init.call(this);
-}
+};
 
 new memoryCardGame.GameManager();
