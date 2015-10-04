@@ -17,25 +17,28 @@ memoryCardGame.GameManager = function(){
 	var cards = [];
 	var imageMap = [];
 	var imagePosition = 0;
+	var cardCounter = 0;
 
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-		prepareCards();
+		cards = getShuffledCards();
 		console.log(cards);
 	};
 
-	function prepareCards(){
+	var getShuffledCards = function(){
 		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
 			cards = cards.concat(createSameCards());
 		}
-		cards = shuffleCards(cards);
-	}
+		return shuffleCards(cards);
+	};
 
 	var createSameCards = function(){
 		var sameCards = [];
 		for(var i = 0; i < CONST.CARD_COPIES; i++){
 			var card = new memoryCardGame.Card();
-			card.image = getImage();
+			card.setImage(getImage());
+			card.setId(imagePosition + cardCounter);
+			cardCounter++;
 			sameCards.push(card);
 		}
 
