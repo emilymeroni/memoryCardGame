@@ -5,6 +5,9 @@ memoryCardGame.GameManager = function(){
 	'use strict';
 
 	var CONST = {
+		CSS: {
+
+		},
 		CARD_COPIES: 2,
 		DEFAULT_IMAGES: [
 			'Hydrangeas.jpg', 
@@ -24,7 +27,7 @@ memoryCardGame.GameManager = function(){
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
 		cards = getShuffledCards();
-		//console.log(cards);
+		draw();
 	};
 
 	var getShuffledCards = function(){
@@ -53,15 +56,19 @@ memoryCardGame.GameManager = function(){
 		imagePosition++;
 	};
 
+	var getImage = function(){
+		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
+	};
+
+	var draw = function(){
+		var html = "";
+	};
+
 	var shuffleCards = function(cards){
 		cards = cards.sort(function() {
 			return 0.5 - Math.random();
 		});
 		return cards;
-	};
-
-	var getImage = function(){
-		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
 	};
 
 	init.call(this);
