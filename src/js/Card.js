@@ -1,17 +1,18 @@
-memoryCardGame.Card = function(){
+/* global $, memoryCardGame */
 
-	this.id = "";
-	this.image = "";
+memoryCardGame.Card = function(params){
+
+	'use strict';
+
+	var config = {
+		id: null,
+		image: null
+	};
+
+	// Merge incoming params with internal config
+	$.extend(config, params);
 
 	var init = function() {
-	};
-
-	this.setId = function(id){
-		this.id = id;
-	};
-
-	this.setImage = function(image){
-		this.image = image;
 	};
 
 	init.call(this);

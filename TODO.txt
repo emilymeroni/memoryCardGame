@@ -10,8 +10,10 @@
 - CSS external file x
 - Minimize risk of CSS class clashes x
 - Introduce grunt or gulp to concatenate, minified, zipped
+- Add jsDocs
 - Create documentation
 - Create Jasmine tests
+- Import JsLint into project
 
 - Allow the user to select his own pictures
 - Validate user input (minimum card number, too many cards)

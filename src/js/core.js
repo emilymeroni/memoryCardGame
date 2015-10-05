@@ -1,1 +1,1 @@
-memoryCardGame = {};
+window.memoryCardGame = {};

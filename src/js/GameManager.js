@@ -1,3 +1,5 @@
+/* global $, memoryCardGame */
+
 memoryCardGame.GameManager = function(){
 
 	'use strict';
@@ -22,7 +24,7 @@ memoryCardGame.GameManager = function(){
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
 		cards = getShuffledCards();
-		console.log(cards);
+		//console.log(cards);
 	};
 
 	var getShuffledCards = function(){
@@ -35,9 +37,10 @@ memoryCardGame.GameManager = function(){
 	var createSameCards = function(){
 		var sameCards = [];
 		for(var i = 0; i < CONST.CARD_COPIES; i++){
-			var card = new memoryCardGame.Card();
-			card.setImage(getImage());
-			card.setId(imagePosition + cardCounter);
+			var card = new memoryCardGame.Card({
+				id: imagePosition + cardCounter,
+				image: getImage()
+			});
 			cardCounter++;
 			sameCards.push(card);
 		}
@@ -63,5 +66,3 @@ memoryCardGame.GameManager = function(){
 
 	init.call(this);
 };
-
-new memoryCardGame.GameManager();
