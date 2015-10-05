@@ -11,7 +11,7 @@ memoryCardGame.GameManager = function(){
 			'Penguins.jpg', 
 			'Tulips.jpg'
 		],	
-		IMAGE_BASE_URL: '..\\memorycardgame_images'
+		IMAGE_BASE_URL: '..\\src\\images'
 	};
 
 	var cards = [];
