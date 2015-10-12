@@ -1,12 +1,15 @@
 /* global $, memoryCardGame */
 
-memoryCardGame.GameManager = function(){
+memoryCardGame.GameManager = function(params){
 
 	'use strict';
 
 	var CONST = {
+		GAME_ID: 'memoryCardGame',
 		CSS: {
-
+			BOARD_CLASS: 'memory-board',
+			CARDS_CLASS: 'memory-cards',
+			SINGLE_CARD_CLASS: 'memory-card'
 		},
 		CARD_COPIES: 2,
 		DEFAULT_IMAGES: [
@@ -19,10 +22,20 @@ memoryCardGame.GameManager = function(){
 		IMAGE_BASE_URL: '..\\src\\images'
 	};
 
+	var config = {
+		gameId: CONST.GAME_ID,
+		cardsClass: CONST.CSS.CARDS_CLASS,
+		singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
+	};
+
+	// Merge incoming params with internal config
+	$.extend(config, params);
+
 	var cards = [];
 	var imageMap = [];
 	var imagePosition = 0;
 	var cardCounter = 0;
+	var self = this;
 
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
@@ -42,7 +55,8 @@ memoryCardGame.GameManager = function(){
 		for(var i = 0; i < CONST.CARD_COPIES; i++){
 			var card = new memoryCardGame.Card({
 				id: imagePosition + cardCounter,
-				image: getImage()
+				image: getImage(),
+				gameManager: self
 			});
 			cardCounter++;
 			sameCards.push(card);
@@ -61,7 +75,15 @@ memoryCardGame.GameManager = function(){
 	};
 
 	var draw = function(){
-		var html = "";
+		var memoryCardGame = $("#" + config.gameId);
+
+		var cardList = $('<ul></ul>').addClass(config.cardsClass);
+
+		for (var i = 0; i < cards.length; i++) {
+			var cardHtmlNode = cards[i].getHtmlNode();
+			cardList.append(cardHtmlNode);
+		}
+		memoryCardGame.append(cardList);
 	};
 
 	var shuffleCards = function(cards){
