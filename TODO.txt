@@ -3,10 +3,11 @@
 	- If the two cards are the same, keep them visible 
 	- Otherwise hide them
 - Introduce grunt or gulp to concatenate, minified, zipped
+- Improve Jasmine tests
 - Add jsDocs
 - Create documentation
-- Create Jasmine tests
-- Import JsLint into project
+- Import JsHint configuration into project
+- Use EventListener to communicate between Card and GameManager
 
 - Allow the user to select his own pictures
 - Validate user input (minimum card number, too many cards)
@@ -16,4 +17,3 @@
 - Pick the number of copies
 - Solo or two player game
 - Allow multiple instances of GameManager
-- Add observer notifier
