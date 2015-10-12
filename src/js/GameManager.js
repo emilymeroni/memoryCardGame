@@ -93,5 +93,8 @@ memoryCardGame.GameManager = function(params){
 		return cards;
 	};
 
+	this.onCardSelected = function(card) {
+	}
+
 	init.call(this);
 };

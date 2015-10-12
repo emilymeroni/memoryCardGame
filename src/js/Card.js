@@ -23,11 +23,11 @@ memoryCardGame.Card = function(params){
 	// Merge incoming params with internal config
 	$.extend(config, params);
 
-	var self = this;
-
 	var flipped = false;
 
 	var imageNode = $(CONST.HTML.IMAGE_NODE);
+
+	var self = this;
 
 	var init = function() {
 	};
@@ -38,21 +38,22 @@ memoryCardGame.Card = function(params){
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS);
 
 		cardNode.click(function(){
-			flip();
-
-			if(flipped){
-				cardNode.append(getImageNode());
-			}
-			else {
-				cardNode.find(imageNode).remove();
-			}
+			flip(cardNode);
+			config.gameManager.onCardSelected(self.id);
 		});
 
 		return cardNode;
 	};
 
-	var flip = function() {
+	var flip = function(card) {
 		flipped = !flipped;
+
+		if(flipped){
+			card.append(getImageNode());
+		}
+		else {
+			card.find(imageNode).remove();
+		}
 	};
 
 	var getImageNode = function() {
