@@ -5,11 +5,12 @@ memoryCardGame.Card = function(params){
 	'use strict';
 
 	var CONST = {
-		DATA: {
-			CARD_ID: 'data-card-id'
-		},
 		CSS: {
 			SINGLE_CARD_CLASS: 'memory-card'
+		},
+		HTML: {
+			CARD_NODE: '<li></li>',
+			IMAGE_NODE: '<img>'
 		}
 	};
 
@@ -26,20 +27,25 @@ memoryCardGame.Card = function(params){
 
 	var flipped = false;
 
+	var imageNode = $(CONST.HTML.IMAGE_NODE);
+
 	var init = function() {
 	};
 
 	this.getHtmlNode = function() {
-		var cardNode = $('<li></li>');
+		var cardNode = $(CONST.HTML.CARD_NODE);
 
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS);
-		cardNode.attr(CONST.DATA.CARD_ID, config.id);
 
 		cardNode.click(function(){
 			flip();
-			var image = getImage();
-			cardNode.append(image);
 
+			if(flipped){
+				cardNode.append(getImageNode());
+			}
+			else {
+				cardNode.find(imageNode).remove();
+			}
 		});
 
 		return cardNode;
@@ -49,13 +55,9 @@ memoryCardGame.Card = function(params){
 		flipped = !flipped;
 	};
 
-	var getImage = function() {
-		if(flipped){
-			var imageNode = $('<img>');
-			imageNode.attr('src', config.image);
-			return imageNode;
-		}
-
+	var getImageNode = function() {
+		imageNode.attr('src', config.image);
+		return imageNode;
 	};
 
 	init.call(this);
