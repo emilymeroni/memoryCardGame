@@ -19,7 +19,7 @@ memoryCardGame.GameManager = function(params){
 			'Penguins.jpg', 
 			'Tulips.jpg'
 		],	
-		IMAGE_BASE_URL: '..\\src\\images'
+		IMAGE_BASE_URL: 'src\\images'
 	};
 
 	var config = {
