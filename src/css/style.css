@@ -3,11 +3,11 @@ body{
     padding: 0;
 }
 
-.memorygame-cards {
+.memory-cards {
     margin: 0;
     padding: 0;
 }
-.memorygame-card {
+.memory-card {
     display: inline-block;
     border: 1px solid black;
     width: 200px;
