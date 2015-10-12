@@ -18,13 +18,16 @@ memoryCardGame.GameManager = function(params){
 			'Koala.jpg', 
 			'Penguins.jpg', 
 			'Tulips.jpg'
-		],	
+		],
+		HTML: {
+			CARD_LIST: '<ul></ul>'
+		},
 		IMAGE_BASE_URL: 'src\\images'
 	};
 
 	var config = {
-		gameId: CONST.GAME_ID,
 		cardsClass: CONST.CSS.CARDS_CLASS,
+		gameId: CONST.GAME_ID,
 		singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
 	};
 
@@ -32,9 +35,13 @@ memoryCardGame.GameManager = function(params){
 	$.extend(config, params);
 
 	var cards = [];
-	var imageMap = [];
-	var imagePosition = 0;
+
 	var cardCounter = 0;
+
+	var imageMap = [];
+
+	var imagePosition = 0;
+
 	var self = this;
 
 	var init = function() {
@@ -43,11 +50,8 @@ memoryCardGame.GameManager = function(params){
 		draw();
 	};
 
-	var getShuffledCards = function(){
-		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-			cards = cards.concat(createSameCards());
-		}
-		return shuffleCards(cards);
+	var changeImagePosition = function(){
+		imagePosition++;
 	};
 
 	var createSameCards = function(){
@@ -66,24 +70,27 @@ memoryCardGame.GameManager = function(params){
 		return sameCards;
 	};
 
-	var changeImagePosition = function(){
-		imagePosition++;
-	};
-
-	var getImage = function(){
-		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
-	};
-
 	var draw = function(){
 		var memoryCardGame = $("#" + config.gameId);
 
-		var cardList = $('<ul></ul>').addClass(config.cardsClass);
+		var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
 
 		for (var i = 0; i < cards.length; i++) {
 			var cardHtmlNode = cards[i].getHtmlNode();
 			cardList.append(cardHtmlNode);
 		}
 		memoryCardGame.append(cardList);
+	};
+
+	var getImage = function(){
+		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
+	};
+
+	var getShuffledCards = function(){
+		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
+			cards = cards.concat(createSameCards());
+		}
+		return shuffleCards(cards);
 	};
 
 	var shuffleCards = function(cards){
@@ -94,7 +101,7 @@ memoryCardGame.GameManager = function(params){
 	};
 
 	this.onCardSelected = function(card) {
-	}
+	};
 
 	init.call(this);
 };
