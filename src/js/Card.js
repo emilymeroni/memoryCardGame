@@ -8,6 +8,9 @@ memoryCardGame.Card = function(params){
 		CSS: {
 			SINGLE_CARD_CLASS: 'memory-card'
 		},
+		DATA: {
+			CARD_ID: 'data-card-id'
+		},
 		HTML: {
 			CARD_NODE: '<li></li>',
 			IMAGE_NODE: '<img>'
@@ -35,11 +38,14 @@ memoryCardGame.Card = function(params){
 	this.getHtmlNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
 
-		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS);
+		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
 
 		cardNode.click(function(){
 			flip(cardNode);
-			config.gameManager.onCardSelected(self.id);
+			if(flipped) {
+				var cardId = $(this).data('card-id');
+				config.gameManager.onCardSelected(cardId);
+			}
 		});
 
 		return cardNode;
