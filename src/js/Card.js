@@ -19,6 +19,7 @@ memoryCardGame.Card = function(params){
 
 	var config = {
 		id: null,
+		flipped: false,
 		image: null,
 		gameManager: null
 	};
@@ -26,45 +27,57 @@ memoryCardGame.Card = function(params){
 	// Merge incoming params with internal config
 	$.extend(config, params);
 
-	var flipped = false;
+	var discovered = false;
 
 	var imageNode = $(CONST.HTML.IMAGE_NODE);
+
 
 	var self = this;
 
 	var init = function() {
 	};
 
+	this.flip = function(cardNode) {
+		config.flipped = !config.flipped;
+
+		if(config.flipped){
+			cardNode.append(getImageNode());
+		}
+		else {
+			cardNode.find(imageNode).remove();
+		}
+	};
+
 	this.getHtmlNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
-
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
-
 		cardNode.click(function(){
-			flip(cardNode);
-			if(flipped) {
-				var cardId = $(this).data('card-id');
-				config.gameManager.onCardSelected(cardId);
+			if(!discovered) {
+				self.flip(cardNode);
+				if(config.flipped) {
+					var cardId = $(this).attr(CONST.DATA.CARD_ID);
+					config.gameManager.onCardSelected(cardId);
+				}
 			}
 		});
-
 		return cardNode;
 	};
 
-	var flip = function(card) {
-		flipped = !flipped;
+	this.getId = function() {
+		return config.id;
+	};
 
-		if(flipped){
-			card.append(getImageNode());
-		}
-		else {
-			card.find(imageNode).remove();
-		}
+	this.getImage = function() {
+		return config.image;
 	};
 
 	var getImageNode = function() {
 		imageNode.attr('src', config.image);
 		return imageNode;
+	};
+
+	this.setDiscovered = function() {
+		discovered = true;
 	};
 
 	init.call(this);

@@ -42,6 +42,8 @@ memoryCardGame.GameManager = function(params){
 
 	var imagePosition = 0;
 
+	var flippedOverCardsId = [];
+
 	var self = this;
 
 	var init = function() {
@@ -56,16 +58,16 @@ memoryCardGame.GameManager = function(params){
 
 	var createSameCards = function(){
 		var sameCards = [];
+		var cardId;
 		for(var i = 0; i < CONST.CARD_COPIES; i++){
+			cardId = cardCounter++;
 			var card = new memoryCardGame.Card({
-				id: imagePosition + cardCounter,
+				id: cardId,
 				image: getImage(),
 				gameManager: self
 			});
-			cardCounter++;
 			sameCards.push(card);
 		}
-
 		changeImagePosition();
 		return sameCards;
 	};
@@ -75,10 +77,12 @@ memoryCardGame.GameManager = function(params){
 
 		var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
 
-		for (var i = 0; i < cards.length; i++) {
-			var cardHtmlNode = cards[i].getHtmlNode();
+		for (var cardId in cards) {
+			//TODO: Find way of iterating by key that is not an incremental
+			var cardHtmlNode = cards[cardId].getHtmlNode();
 			cardList.append(cardHtmlNode);
 		}
+
 		memoryCardGame.append(cardList);
 	};
 
@@ -90,7 +94,15 @@ memoryCardGame.GameManager = function(params){
 		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
 			cards = cards.concat(createSameCards());
 		}
-		return shuffleCards(cards);
+		var cardsWithShuffle = shuffleCards(cards);
+		var tmp = [];
+
+		for(var j = 0; j < cardsWithShuffle.length; j++) {
+			tmp[cardsWithShuffle[j].getId()] = cardsWithShuffle[j];
+		}
+
+		cards = tmp;
+		return cards;
 	};
 
 	var shuffleCards = function(cards){
@@ -100,7 +112,32 @@ memoryCardGame.GameManager = function(params){
 		return cards;
 	};
 
-	this.onCardSelected = function(card) {
+	this.onCardSelected = function(cardId)  {
+
+		flippedOverCardsId.push(cardId);
+
+		if(flippedOverCardsId.length > 1 && (cards[flippedOverCardsId[flippedOverCardsId.length - 2]].getImage() === cards[cardId].getImage())){
+			if((flippedOverCardsId.length) % CONST.CARD_COPIES === 0){
+				for(var i = 0; i < flippedOverCardsId.length; i++) {
+					cards[flippedOverCardsId[i]].setDiscovered();
+				}
+				flippedOverCardsId = [];
+			}
+			else {
+				flippedOverCardsId.push(cardId);
+			}
+		}
+		else if(flippedOverCardsId.length > 1) {
+			{
+				for (var j = 0; j < flippedOverCardsId.length; j++) {
+					//TODO: Move card selection to card class
+					var cardNode = $('.memory-card[data-card-id=' + flippedOverCardsId[j] + ']');
+					cards[flippedOverCardsId[j]].flip(cardNode);
+				}
+
+				flippedOverCardsId = [];
+			}
+		}
 	};
 
 	init.call(this);
