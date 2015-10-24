@@ -72,6 +72,12 @@ memoryCardGame.GameManager = function(params){
 		return sameCards;
 	};
 
+	var setDiscoveredCardsById =  function(flippedOverCardsId) {
+		for(var i = 0; i < flippedOverCardsId.length; i++) {
+			cards[flippedOverCardsId[i]].setDiscovered();
+		}
+	};
+
 	var draw = function(){
 		var memoryCardGame = $("#" + config.gameId);
 
@@ -84,6 +90,12 @@ memoryCardGame.GameManager = function(params){
 		}
 
 		memoryCardGame.append(cardList);
+	};
+
+	var flipCardsDownById = function(flippedOverCardsId) {
+		for (var i = 0; i < flippedOverCardsId.length; i++) {
+			cards[flippedOverCardsId[i]].getCardNodeAndFlip();
+		}
 	};
 
 	var getImage = function(){
@@ -113,14 +125,10 @@ memoryCardGame.GameManager = function(params){
 	};
 
 	this.onCardSelected = function(cardId)  {
-
 		flippedOverCardsId.push(cardId);
-
 		if(flippedOverCardsId.length > 1 && (cards[flippedOverCardsId[flippedOverCardsId.length - 2]].getImage() === cards[cardId].getImage())){
 			if((flippedOverCardsId.length) % CONST.CARD_COPIES === 0){
-				for(var i = 0; i < flippedOverCardsId.length; i++) {
-					cards[flippedOverCardsId[i]].setDiscovered();
-				}
+				setDiscoveredCardsById(flippedOverCardsId);
 				flippedOverCardsId = [];
 			}
 			else {
@@ -129,10 +137,7 @@ memoryCardGame.GameManager = function(params){
 		}
 		else if(flippedOverCardsId.length > 1) {
 			{
-				for (var j = 0; j < flippedOverCardsId.length; j++) {
-					cards[flippedOverCardsId[j]].getCardNodeAndFlip();
-				}
-
+				flipCardsDownById(flippedOverCardsId);
 				flippedOverCardsId = [];
 			}
 		}
