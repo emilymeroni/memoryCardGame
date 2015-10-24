@@ -130,9 +130,7 @@ memoryCardGame.GameManager = function(params){
 		else if(flippedOverCardsId.length > 1) {
 			{
 				for (var j = 0; j < flippedOverCardsId.length; j++) {
-					//TODO: Move card selection to card class
-					var cardNode = $('.memory-card[data-card-id=' + flippedOverCardsId[j] + ']');
-					cards[flippedOverCardsId[j]].flip(cardNode);
+					cards[flippedOverCardsId[j]].getCardNodeAndFlip();
 				}
 
 				flippedOverCardsId = [];

@@ -31,13 +31,10 @@ memoryCardGame.Card = function(params){
 
 	var imageNode = $(CONST.HTML.IMAGE_NODE);
 
-
-	var self = this;
-
 	var init = function() {
 	};
 
-	this.flip = function(cardNode) {
+	 var flip = function(cardNode) {
 		config.flipped = !config.flipped;
 
 		if(config.flipped){
@@ -48,12 +45,17 @@ memoryCardGame.Card = function(params){
 		}
 	};
 
+	this.getCardNodeAndFlip = function() {
+		var cardNode = $('.' + CONST.CSS.SINGLE_CARD_CLASS + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
+		flip(cardNode);
+	}
+
 	this.getHtmlNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
 		cardNode.click(function(){
 			if(!discovered) {
-				self.flip(cardNode);
+				flip(cardNode);
 				if(config.flipped) {
 					var cardId = $(this).attr(CONST.DATA.CARD_ID);
 					config.gameManager.onCardSelected(cardId);
