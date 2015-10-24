@@ -127,18 +127,20 @@ memoryCardGame.GameManager = function(params){
 
 	this.onCardSelected = function(cardId)  {
 		flippedOverCardsId.push(cardId);
-		if(flippedOverCardsId.length > 1 && (cards[flippedOverCardsId[flippedOverCardsId.length - 2]].getImage() === cards[cardId].getImage())){
-			if((flippedOverCardsId.length) % CONST.CARD_COPIES === 0){
-				setDiscoveredCardsById(flippedOverCardsId);
-				flippedOverCardsId = [];
+		if(flippedOverCardsId.length > 1){
+			if(cards[flippedOverCardsId[flippedOverCardsId.length - 2]].getImage() === cards[cardId].getImage()) {
+				if((flippedOverCardsId.length) % CONST.CARD_COPIES === 0){
+					setDiscoveredCardsById(flippedOverCardsId);
+					flippedOverCardsId = [];
+				}
+				else {
+					flippedOverCardsId.push(cardId);
+				}
 			}
 			else {
-				flippedOverCardsId.push(cardId);
+				flipCardsDownById(flippedOverCardsId);
+				flippedOverCardsId = [];
 			}
-		}
-		else if(flippedOverCardsId.length > 1) {
-			flipCardsDownById(flippedOverCardsId);
-			flippedOverCardsId = [];
 		}
 	};
 
