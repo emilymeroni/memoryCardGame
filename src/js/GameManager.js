@@ -79,7 +79,7 @@ memoryCardGame.GameManager = function(params){
 
 		for (var cardId in cards) {
 			//TODO: Find way of iterating by key that is not an incremental
-			var cardHtmlNode = cards[cardId].getHtmlNode();
+			var cardHtmlNode = cards[cardId].makeHtmlNode();
 			cardList.append(cardHtmlNode);
 		}
 

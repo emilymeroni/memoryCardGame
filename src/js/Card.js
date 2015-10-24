@@ -50,7 +50,7 @@ memoryCardGame.Card = function(params){
 		flip(cardNode);
 	}
 
-	this.getHtmlNode = function() {
+	this.makeHtmlNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
 		cardNode.click(function(){
