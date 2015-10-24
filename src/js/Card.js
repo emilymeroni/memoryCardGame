@@ -50,6 +50,19 @@ memoryCardGame.Card = function(params){
 		flip(cardNode);
 	}
 
+	this.getId = function() {
+		return config.id;
+	};
+
+	this.getImage = function() {
+		return config.image;
+	};
+
+	var getImageNode = function() {
+		imageNode.attr('src', config.image);
+		return imageNode;
+	};
+
 	this.makeHtmlNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
@@ -63,19 +76,6 @@ memoryCardGame.Card = function(params){
 			}
 		});
 		return cardNode;
-	};
-
-	this.getId = function() {
-		return config.id;
-	};
-
-	this.getImage = function() {
-		return config.image;
-	};
-
-	var getImageNode = function() {
-		imageNode.attr('src', config.image);
-		return imageNode;
 	};
 
 	this.setDiscovered = function() {
