@@ -1,7 +1,5 @@
-- When a card is selected and no other cards are displayed, leave it fliped up
-- When a second card is selected check if the previous card is the same
-	- If the two cards are the same, keep them visible 
-	- Otherwise hide them
+- Add visual feedback on card selection
+- Create a card map to quickly find a card by its id
 - Introduce grunt or gulp to concatenate, minified, zipped
 - Improve Jasmine tests
 - Add jsDocs
