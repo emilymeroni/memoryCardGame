@@ -43,13 +43,16 @@ memoryCardGame.GameManager = function(params){
 
 	var imagePosition = 0;
 
-	var flippedOverCardsId = [];
+	var flippedOverCardsIds = [];
 
 	var self = this;
 
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-		cards = getShuffledCards();
+		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
+			cards = cards.concat(createSameCards());
+		}
+		shuffleCards();
 		draw();
 	};
 
@@ -73,9 +76,9 @@ memoryCardGame.GameManager = function(params){
 		return sameCards;
 	};
 
-	var setDiscoveredCardsById =  function(flippedOverCardsId) {
-		for(var i = 0; i < flippedOverCardsId.length; i++) {
-			cards[flippedOverCardsId[i]].setDiscovered();
+	var setDiscoveredCardsById =  function(flippedOverCardsIds) {
+		for(var i = 0; i < flippedOverCardsIds.length; i++) {
+			getCardInDeckById(flippedOverCardsIds[i]).setDiscovered();
 		}
 	};
 
@@ -84,18 +87,26 @@ memoryCardGame.GameManager = function(params){
 
 		var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
 
-		for (var cardId in cards) {
-			//TODO: Find way of iterating by key that is not an incremental
-			var cardHtmlNode = cards[cardId].makeHtmlNode();
+		for(var i = 0; i < cards.length; i++) {
+			var cardHtmlNode = cards[i].makeHtmlNode();
 			cardList.append(cardHtmlNode);
 		}
 
 		memoryCardGame.append(cardList);
 	};
 
-	var flipCardsDownById = function(flippedOverCardsId) {
-		for (var i = 0; i < flippedOverCardsId.length; i++) {
-			cards[flippedOverCardsId[i]].getCardNodeAndFlip();
+	var flipCardsDownById = function(flippedOverCardsIds) {
+		for (var i = 0; i < flippedOverCardsIds.length; i++) {
+			getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
+		}
+	};
+
+	//TODO: Create a map
+	var getCardInDeckById = function(cardId) {
+		for(var i = 0; i < cards.length; i++) {
+			if(cards[i].getId() === parseInt(cardId)) {
+				return cards[i];
+			}
 		}
 	};
 
@@ -103,43 +114,27 @@ memoryCardGame.GameManager = function(params){
 		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
 	};
 
-	var getShuffledCards = function(){
-		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-			cards = cards.concat(createSameCards());
-		}
-		var cardsWithShuffle = shuffleCards(cards);
-		var tmp = [];
-
-		for(var j = 0; j < cardsWithShuffle.length; j++) {
-			tmp[cardsWithShuffle[j].getId()] = cardsWithShuffle[j];
-		}
-
-		cards = tmp;
-		return cards;
-	};
-
-	var shuffleCards = function(cards){
+	var shuffleCards = function(){
 		cards = cards.sort(function() {
 			return 0.5 - Math.random();
 		});
-		return cards;
 	};
 
 	this.onCardSelected = function(cardId)  {
-		flippedOverCardsId.push(cardId);
-		if(flippedOverCardsId.length > 1){
-			if(cards[flippedOverCardsId[flippedOverCardsId.length - 2]].getImage() === cards[cardId].getImage()) {
-				if((flippedOverCardsId.length) % CONST.CARD_COPIES === 0){
-					setDiscoveredCardsById(flippedOverCardsId);
-					flippedOverCardsId = [];
+		flippedOverCardsIds.push(cardId);
+		if(flippedOverCardsIds.length > 1){
+			if(getCardInDeckById(flippedOverCardsIds[flippedOverCardsIds.length - 2]).getImage() === getCardInDeckById(cardId).getImage()) {
+				if((flippedOverCardsIds.length) % CONST.CARD_COPIES === 0){
+					setDiscoveredCardsById(flippedOverCardsIds);
+					flippedOverCardsIds = [];
 				}
 				else {
-					flippedOverCardsId.push(cardId);
+					flippedOverCardsIds.push(cardId);
 				}
 			}
 			else {
-				flipCardsDownById(flippedOverCardsId);
-				flippedOverCardsId = [];
+				flipCardsDownById(flippedOverCardsIds);
+				flippedOverCardsIds = [];
 			}
 		}
 	};
