@@ -22,7 +22,8 @@ memoryCardGame.GameManager = function(params){
 		HTML: {
 			CARD_LIST: '<ul></ul>'
 		},
-		IMAGE_BASE_URL: 'src\\images'
+		IMAGE_BASE_URL: 'src\\images',
+		TIME_FOR_FLIP: 500
 	};
 
 	var config = {
@@ -136,10 +137,8 @@ memoryCardGame.GameManager = function(params){
 			}
 		}
 		else if(flippedOverCardsId.length > 1) {
-			{
-				flipCardsDownById(flippedOverCardsId);
-				flippedOverCardsId = [];
-			}
+			flipCardsDownById(flippedOverCardsId);
+			flippedOverCardsId = [];
 		}
 	};
 
