@@ -49,9 +49,7 @@ memoryCardGame.GameManager = function(params){
 
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-			createSameCards();
-		}
+		prepareCards();
 		shuffleCards();
 		draw();
 	};
@@ -94,9 +92,11 @@ memoryCardGame.GameManager = function(params){
 	};
 
 	var flipCardsDownById = function(flippedOverCardsIds) {
-		for (var i = 0; i < flippedOverCardsIds.length; i++) {
-			getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
-		}
+		setTimeout(function () {
+			for (var i = 0; i < flippedOverCardsIds.length; i++) {
+				getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
+			}
+		}, CONST.TIME_FOR_FLIP);
 	};
 
 	//TODO: Create a map
@@ -110,6 +110,12 @@ memoryCardGame.GameManager = function(params){
 
 	var getImage = function(){
 		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
+	};
+
+	var prepareCards = function() {
+		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
+			createSameCards();
+		}
 	};
 
 	var shuffleCards = function(){
