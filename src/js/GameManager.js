@@ -11,7 +11,7 @@ memoryCardGame.GameManager = function (params) {
             CARDS_CLASS: 'memory-cards',
             SINGLE_CARD_CLASS: 'memory-card'
         },
-        CARD_COPIES: 3,
+        CARD_COPIES: 2,
         DEFAULT_IMAGES: [
             'Hydrangeas.jpg',
             'Jellyfish.jpg',
@@ -38,6 +38,8 @@ memoryCardGame.GameManager = function (params) {
     var cards = [];
 
     var cardCounter = 0;
+
+    var discoveredSameCards = 0;
 
     var imageMap = [];
 
@@ -79,18 +81,16 @@ memoryCardGame.GameManager = function (params) {
         for (var i = 0; i < flippedOverCardsIds.length; i++) {
             getCardInDeckById(flippedOverCardsIds[i]).setDiscovered();
         }
+        discoveredSameCards++;
     };
 
     var draw = function () {
         var memoryCardGame = $("#" + config.gameId);
-
         var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
-
         for (var i = 0; i < cards.length; i++) {
             var cardHtmlNode = cards[i].makeHtmlNode();
             cardList.append(cardHtmlNode);
         }
-
         memoryCardGame.append(cardList);
     };
 
@@ -109,6 +109,9 @@ memoryCardGame.GameManager = function (params) {
                 return cards[i];
             }
         }
+    };
+
+    var endGame = function() {
     };
 
     var getImage = function () {
@@ -140,6 +143,9 @@ memoryCardGame.GameManager = function (params) {
                 if ((flippedOverCardsIds.length) % CONST.CARD_COPIES === 0) {
                     setDiscoveredCardsById(flippedOverCardsIds);
                     flippedOverCardsIds = [];
+                    if(discoveredSameCards * CONST.CARD_COPIES === cards.length) {
+                        endGame();
+                    }
                 }
             }
             else {
