@@ -11,7 +11,7 @@ memoryCardGame.GameManager = function(params){
 			CARDS_CLASS: 'memory-cards',
 			SINGLE_CARD_CLASS: 'memory-card'
 		},
-		CARD_COPIES: 2,
+		CARD_COPIES: 3,
 		DEFAULT_IMAGES: [
 			'Hydrangeas.jpg', 
 			'Jellyfish.jpg', 
@@ -91,7 +91,7 @@ memoryCardGame.GameManager = function(params){
 		memoryCardGame.append(cardList);
 	};
 
-	var flipCardsDownById = function(flippedOverCardsIds) {
+	var coverCardsById = function(flippedOverCardsIds) {
 		setTimeout(function () {
 			for (var i = 0; i < flippedOverCardsIds.length; i++) {
 				getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
@@ -132,12 +132,9 @@ memoryCardGame.GameManager = function(params){
 					setDiscoveredCardsById(flippedOverCardsIds);
 					flippedOverCardsIds = [];
 				}
-				else {
-					flippedOverCardsIds.push(cardId);
-				}
 			}
 			else {
-				flipCardsDownById(flippedOverCardsIds);
+				coverCardsById(flippedOverCardsIds);
 				flippedOverCardsIds = [];
 			}
 		}
