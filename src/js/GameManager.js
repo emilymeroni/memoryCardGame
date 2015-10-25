@@ -1,144 +1,153 @@
 /* global $, memoryCardGame */
 
-memoryCardGame.GameManager = function(params){
+memoryCardGame.GameManager = function (params) {
 
-	'use strict';
+    'use strict';
 
-	var CONST = {
-		GAME_ID: 'memoryCardGame',
-		CSS: {
-			BOARD_CLASS: 'memory-board',
-			CARDS_CLASS: 'memory-cards',
-			SINGLE_CARD_CLASS: 'memory-card'
-		},
-		CARD_COPIES: 3,
-		DEFAULT_IMAGES: [
-			'Hydrangeas.jpg', 
-			'Jellyfish.jpg', 
-			'Koala.jpg', 
-			'Penguins.jpg', 
-			'Tulips.jpg'
-		],
-		HTML: {
-			CARD_LIST: '<ul></ul>'
-		},
-		IMAGE_BASE_URL: 'src\\images',
-		TIME_FOR_FLIP: 500
-	};
+    var CONST = {
+        GAME_ID: 'memoryCardGame',
+        CSS: {
+            BOARD_CLASS: 'memory-board',
+            CARDS_CLASS: 'memory-cards',
+            SINGLE_CARD_CLASS: 'memory-card'
+        },
+        CARD_COPIES: 3,
+        DEFAULT_IMAGES: [
+            'Hydrangeas.jpg',
+            'Jellyfish.jpg',
+            'Koala.jpg',
+            'Penguins.jpg',
+            'Tulips.jpg'
+        ],
+        HTML: {
+            CARD_LIST: '<ul></ul>'
+        },
+        IMAGE_BASE_URL: 'src\\images',
+        TIME_FOR_FLIP: 500
+    };
 
-	var config = {
-		cardsClass: CONST.CSS.CARDS_CLASS,
-		gameId: CONST.GAME_ID,
-		singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
-	};
+    var config = {
+        cardsClass: CONST.CSS.CARDS_CLASS,
+        gameId: CONST.GAME_ID,
+        singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
+    };
 
-	// Merge incoming params with internal config
-	$.extend(config, params);
+    // Merge incoming params with internal config
+    $.extend(config, params);
 
-	var cards = [];
+    var cards = [];
 
-	var cardCounter = 0;
+    var cardCounter = 0;
 
-	var imageMap = [];
+    var imageMap = [];
 
-	var imagePosition = 0;
+    var imagePosition = 0;
 
-	var flippedOverCardsIds = [];
+    var flippedOverCardsIds = [];
 
-	var self = this;
+    var self = this;
 
-	var init = function() {
-		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-		prepareCards();
-		shuffleCards();
-		draw();
-	};
+    var timer = 0;
 
-	var changeImagePosition = function(){
-		imagePosition++;
-	};
+    var init = function () {
+        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
+        prepareCards();
+        shuffleCards();
+        draw();
+        startTimer();
+    };
 
-	var createSameCards = function(){
-		var cardId;
-		for(var i = 0; i < CONST.CARD_COPIES; i++){
-			cardId = cardCounter++;
-			var card = new memoryCardGame.Card({
-				id: cardId,
-				image: getImage(),
-				gameManager: self
-			});
-			cards[cardId] = card;
-		}
-		changeImagePosition();
-	};
+    var changeImagePosition = function () {
+        imagePosition++;
+    };
 
-	var setDiscoveredCardsById =  function(flippedOverCardsIds) {
-		for(var i = 0; i < flippedOverCardsIds.length; i++) {
-			getCardInDeckById(flippedOverCardsIds[i]).setDiscovered();
-		}
-	};
+    var createSameCards = function () {
+        var cardId;
+        for (var i = 0; i < CONST.CARD_COPIES; i++) {
+            cardId = cardCounter++;
+            var card = new memoryCardGame.Card({
+                id: cardId,
+                image: getImage(),
+                gameManager: self
+            });
+            cards[cardId] = card;
+        }
+        changeImagePosition();
+    };
 
-	var draw = function(){
-		var memoryCardGame = $("#" + config.gameId);
+    var setDiscoveredCardsById = function (flippedOverCardsIds) {
+        for (var i = 0; i < flippedOverCardsIds.length; i++) {
+            getCardInDeckById(flippedOverCardsIds[i]).setDiscovered();
+        }
+    };
 
-		var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
+    var draw = function () {
+        var memoryCardGame = $("#" + config.gameId);
 
-		for(var i = 0; i < cards.length; i++) {
-			var cardHtmlNode = cards[i].makeHtmlNode();
-			cardList.append(cardHtmlNode);
-		}
+        var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
 
-		memoryCardGame.append(cardList);
-	};
+        for (var i = 0; i < cards.length; i++) {
+            var cardHtmlNode = cards[i].makeHtmlNode();
+            cardList.append(cardHtmlNode);
+        }
 
-	var coverCardsById = function(flippedOverCardsIds) {
-		setTimeout(function () {
-			for (var i = 0; i < flippedOverCardsIds.length; i++) {
-				getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
-			}
-		}, CONST.TIME_FOR_FLIP);
-	};
+        memoryCardGame.append(cardList);
+    };
 
-	//TODO: Create a map
-	var getCardInDeckById = function(cardId) {
-		for(var i = 0; i < cards.length; i++) {
-			if(cards[i].getId() === parseInt(cardId)) {
-				return cards[i];
-			}
-		}
-	};
+    var coverCardsById = function (flippedOverCardsIds) {
+        setTimeout(function () {
+            for (var i = 0; i < flippedOverCardsIds.length; i++) {
+                getCardInDeckById(flippedOverCardsIds[i]).getCardNodeAndFlip();
+            }
+        }, CONST.TIME_FOR_FLIP);
+    };
 
-	var getImage = function(){
-		return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
-	};
+    //TODO: Create a map
+    var getCardInDeckById = function (cardId) {
+        for (var i = 0; i < cards.length; i++) {
+            if (cards[i].getId() === parseInt(cardId)) {
+                return cards[i];
+            }
+        }
+    };
 
-	var prepareCards = function() {
-		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-			createSameCards();
-		}
-	};
+    var getImage = function () {
+        return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
+    };
 
-	var shuffleCards = function(){
-		cards = cards.sort(function() {
-			return 0.5 - Math.random();
-		});
-	};
+    var prepareCards = function () {
+        for (var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
+            createSameCards();
+        }
+    };
 
-	this.onCardSelected = function(cardId)  {
-		flippedOverCardsIds.push(cardId);
-		if(flippedOverCardsIds.length > 1){
-			if(getCardInDeckById(flippedOverCardsIds[flippedOverCardsIds.length - 2]).getImage() === getCardInDeckById(cardId).getImage()) {
-				if((flippedOverCardsIds.length) % CONST.CARD_COPIES === 0){
-					setDiscoveredCardsById(flippedOverCardsIds);
-					flippedOverCardsIds = [];
-				}
-			}
-			else {
-				coverCardsById(flippedOverCardsIds);
-				flippedOverCardsIds = [];
-			}
-		}
-	};
+    var shuffleCards = function () {
+        cards = cards.sort(function () {
+            return 0.5 - Math.random();
+        });
+    };
 
-	init.call(this);
+    var startTimer = function () {
+        setInterval(function () {
+            timer++;
+        }, 1000);
+    };
+
+    this.onCardSelected = function (cardId) {
+        flippedOverCardsIds.push(cardId);
+        if (flippedOverCardsIds.length > 1) {
+            if (getCardInDeckById(flippedOverCardsIds[flippedOverCardsIds.length - 2]).getImage() === getCardInDeckById(cardId).getImage()) {
+                if ((flippedOverCardsIds.length) % CONST.CARD_COPIES === 0) {
+                    setDiscoveredCardsById(flippedOverCardsIds);
+                    flippedOverCardsIds = [];
+                }
+            }
+            else {
+                coverCardsById(flippedOverCardsIds);
+                flippedOverCardsIds = [];
+            }
+        }
+    };
+
+    init.call(this);
 };
