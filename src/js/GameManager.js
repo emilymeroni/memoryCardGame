@@ -50,7 +50,7 @@ memoryCardGame.GameManager = function(params){
 	var init = function() {
 		imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
 		for(var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-			cards = cards.concat(createSameCards());
+			createSameCards();
 		}
 		shuffleCards();
 		draw();
@@ -61,7 +61,6 @@ memoryCardGame.GameManager = function(params){
 	};
 
 	var createSameCards = function(){
-		var sameCards = [];
 		var cardId;
 		for(var i = 0; i < CONST.CARD_COPIES; i++){
 			cardId = cardCounter++;
@@ -70,10 +69,9 @@ memoryCardGame.GameManager = function(params){
 				image: getImage(),
 				gameManager: self
 			});
-			sameCards.push(card);
+			cards[cardId] = card;
 		}
 		changeImagePosition();
-		return sameCards;
 	};
 
 	var setDiscoveredCardsById =  function(flippedOverCardsIds) {
