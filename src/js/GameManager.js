@@ -37,8 +37,6 @@ memoryCardGame.GameManager = function (params) {
 
     var cards = [];
 
-    var cardCounter = 0;
-
     var discoveredSameCards = 0;
 
     var imageMap = [];
@@ -66,7 +64,7 @@ memoryCardGame.GameManager = function (params) {
     var createSameCards = function () {
         var cardId;
         for (var i = 0; i < CONST.CARD_COPIES; i++) {
-            cardId = cardCounter++;
+            cardId = cards.length;
             var card = new memoryCardGame.Card({
                 id: cardId,
                 image: getImage(),
