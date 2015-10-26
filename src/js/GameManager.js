@@ -11,7 +11,7 @@ memoryCardGame.GameManager = function (params) {
             CARDS_CLASS: 'memory-cards',
             SINGLE_CARD_CLASS: 'memory-card'
         },
-        CARD_COPIES: 3,
+        CARD_COPIES: 2,
         DEFAULT_IMAGES: [
             'Hydrangeas.jpg',
             'Jellyfish.jpg',
@@ -61,6 +61,7 @@ memoryCardGame.GameManager = function (params) {
         imagePosition++;
     };
 
+    //TODO Base loop on imageMap size
     var createSameCards = function () {
         for (var i = 0; i < CONST.CARD_COPIES; i++) {
             var card = new memoryCardGame.Card({
@@ -81,11 +82,12 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var draw = function () {
+        //TODO: Replace id with a class
         var memoryCardGame = $("#" + config.gameId);
         var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
         for (var i = 0; i < cards.length; i++) {
-            var cardHtmlNode = cards[i].makeHtmlNode();
-            cardList.append(cardHtmlNode);
+            var cardNode = cards[i].getNode();
+            cardList.append(cardNode);
         }
         memoryCardGame.append(cardList);
     };
@@ -98,6 +100,7 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIME_FOR_FLIP);
     };
 
+    //TODO: Cleanup timer
     var endGame = function() {
     };
 
@@ -117,28 +120,38 @@ memoryCardGame.GameManager = function (params) {
         });
     };
 
+    //TODO: Change interval milliseconds to constant
     var startTimer = function () {
         setInterval(function () {
             timer++;
         }, 1000);
     };
 
+    var getPreviousCardFromDeck = function () {
+        return flippedOverCards[flippedOverCards.length - 2];
+    };
+
+    var isGameEnded = function() {
+        return discoveredSameCards * CONST.CARD_COPIES === cards.length;
+    };
+
     this.onCardSelected = function (card) {
         flippedOverCards.push(card);
-        if (flippedOverCards.length > 1) {
-            if (flippedOverCards[flippedOverCards.length - 2].getImage() === card.getImage()) {
-                if ((flippedOverCards.length) % CONST.CARD_COPIES === 0) {
-                    setDiscoveredCards(flippedOverCards);
-                    flippedOverCards = [];
-                    if(discoveredSameCards * CONST.CARD_COPIES === cards.length) {
-                        endGame();
-                    }
+        if (flippedOverCards.length <= 1) {
+            return;
+        }
+        if (getPreviousCardFromDeck().getImage() === card.getImage()) {
+            if (flippedOverCards.length === CONST.CARD_COPIES) {
+                setDiscoveredCards(flippedOverCards);
+                flippedOverCards = [];
+                if(isGameEnded() === true) {
+                    endGame();
                 }
             }
-            else {
-                coverCards(flippedOverCards);
-                flippedOverCards = [];
-            }
+        }
+        else {
+            coverCards(flippedOverCards);
+            flippedOverCards = [];
         }
     };
 

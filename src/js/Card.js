@@ -31,15 +31,12 @@ memoryCardGame.Card = function(params){
 
 	var imageNode = $(CONST.HTML.IMAGE_NODE);
 
-	var init = function() {
-	};
-
 	var self = this;
 
 	 var flip = function(cardNode) {
 		config.flipped = !config.flipped;
 
-		if(config.flipped){
+		if(config.flipped === true){
 			cardNode.append(getImageNode());
 		}
 		else {
@@ -50,7 +47,7 @@ memoryCardGame.Card = function(params){
 	this.getCardNodeAndFlip = function() {
 		var cardNode = $('.' + CONST.CSS.SINGLE_CARD_CLASS + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
 		flip(cardNode);
-	}
+	};
 
 	this.getImage = function() {
 		return config.image;
@@ -61,13 +58,13 @@ memoryCardGame.Card = function(params){
 		return imageNode;
 	};
 
-	this.makeHtmlNode = function() {
+	this.getNode = function() {
 		var cardNode = $(CONST.HTML.CARD_NODE);
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
 		cardNode.click(function(){
-			if(!discovered) {
+			if(discovered === false) {
 				flip(cardNode);
-				if(config.flipped) {
+				if(config.flipped === true) {
 					config.gameManager.onCardSelected(self);
 				}
 			}
@@ -78,7 +75,5 @@ memoryCardGame.Card = function(params){
 	this.setDiscovered = function() {
 		discovered = true;
 	};
-
-	init.call(this);
 };
 
