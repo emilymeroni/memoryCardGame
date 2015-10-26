@@ -34,6 +34,8 @@ memoryCardGame.Card = function(params){
 	var init = function() {
 	};
 
+	var self = this;
+
 	 var flip = function(cardNode) {
 		config.flipped = !config.flipped;
 
@@ -49,10 +51,6 @@ memoryCardGame.Card = function(params){
 		var cardNode = $('.' + CONST.CSS.SINGLE_CARD_CLASS + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
 		flip(cardNode);
 	}
-
-	this.getId = function() {
-		return config.id;
-	};
 
 	this.getImage = function() {
 		return config.image;
@@ -70,8 +68,7 @@ memoryCardGame.Card = function(params){
 			if(!discovered) {
 				flip(cardNode);
 				if(config.flipped) {
-					var cardId = $(this).attr(CONST.DATA.CARD_ID);
-					config.gameManager.onCardSelected(cardId);
+					config.gameManager.onCardSelected(self);
 				}
 			}
 		});
