@@ -50,7 +50,6 @@ memoryCardGame.GameManager = function (params) {
     var timer = 0;
 
     var init = function () {
-        new memoryCardGame.UserOptions();
         imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
         prepareCards();
         shuffleCards();

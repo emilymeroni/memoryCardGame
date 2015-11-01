@@ -33,6 +33,7 @@ memoryCardGame.UserOptions = function(params){
 		var closeButton = $('<button></button>').text('Close');
 		closeButton.click(function(){
 			self.container.hide();
+			new memoryCardGame.GameManager();
 		});
 
 		userOptionsPanel.append(userOptionsTitle);
