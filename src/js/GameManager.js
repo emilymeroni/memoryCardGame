@@ -9,6 +9,8 @@ memoryCardGame.GameManager = function (params) {
         CSS: {
             BOARD_CLASS: 'memory-board',
             CARDS_CLASS: 'memory-cards',
+            CURRENT_STATS_CONTAINER: 'current-stats-container',
+            CURRENT_MOVES: 'current-moves',
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
@@ -23,6 +25,9 @@ memoryCardGame.GameManager = function (params) {
             CARD_LIST: '<ul></ul>'
         },
         IMAGE_BASE_URL: 'src\\images',
+        SELECTOR: {
+            CURRENT_MOVES: '.current-moves'
+        },
         TIME_FOR_FLIP: 500
     };
 
@@ -42,6 +47,8 @@ memoryCardGame.GameManager = function (params) {
     var imageMap = [];
 
     var imagePosition = 0;
+
+    var movesCounter = 0;
 
     var flippedOverCards = [];
 
@@ -83,13 +90,25 @@ memoryCardGame.GameManager = function (params) {
 
     var draw = function () {
         //TODO: Replace id with a class
-        var memoryCardGame = $("#" + config.gameId);
+        var memoryCardGame = $('#' + config.gameId);
+        drawCurrentStats(memoryCardGame);
+        drawCards(memoryCardGame);
+    };
+
+    var drawCurrentStats = function(rootNode) {
+        var statsContainer = $('<div></div>').addClass(CONST.CSS.CURRENT_STATS_CONTAINER);
+        var currentMoves = $('<div></div>').addClass(CONST.CSS.CURRENT_MOVES);
+        statsContainer.append(currentMoves);
+        rootNode.append(statsContainer);
+    };
+
+    var drawCards = function(rootNode) {
         var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
         for (var i = 0; i < cards.length; i++) {
             var cardNode = cards[i].getNode();
             cardList.append(cardNode);
         }
-        memoryCardGame.append(cardList);
+        rootNode.append(cardList);
     };
 
     var coverCards = function (flippedOverCards) {
@@ -105,7 +124,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var getImage = function () {
-        return CONST.IMAGE_BASE_URL + "\\" + imageMap[imagePosition];
+        return CONST.IMAGE_BASE_URL + '\\' + imageMap[imagePosition];
     };
 
     var prepareCards = function () {
@@ -135,6 +154,11 @@ memoryCardGame.GameManager = function (params) {
         return discoveredSameCards * CONST.CARD_COPIES === cards.length;
     };
 
+    var increaseMovesCounter = function() {
+        movesCounter++;
+        $(CONST.SELECTOR.CURRENT_MOVES).text(movesCounter);
+    };
+
     this.onCardSelected = function (card) {
         flippedOverCards.push(card);
         if (flippedOverCards.length <= 1) {
@@ -144,6 +168,7 @@ memoryCardGame.GameManager = function (params) {
             if (flippedOverCards.length === CONST.CARD_COPIES) {
                 setDiscoveredCards(flippedOverCards);
                 flippedOverCards = [];
+                increaseMovesCounter();
                 if(isGameEnded() === true) {
                     endGame();
                 }
@@ -152,6 +177,7 @@ memoryCardGame.GameManager = function (params) {
         else {
             coverCards(flippedOverCards);
             flippedOverCards = [];
+            increaseMovesCounter();
         }
     };
 
