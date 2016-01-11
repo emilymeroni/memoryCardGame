@@ -10,7 +10,9 @@ memoryCardGame.GameManager = function (params) {
             BOARD_CLASS: 'memory-board',
             CARDS_CLASS: 'memory-cards',
             CURRENT_STATS_CONTAINER: 'current-stats-container',
-            CURRENT_MOVES: 'current-moves',
+            ATTEMPTS: 'attempts',
+            ATTEMPTS_TEXT: 'attempts-text',
+            ATTEMPTS_NUMBER: 'attempts-number',
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
@@ -26,7 +28,10 @@ memoryCardGame.GameManager = function (params) {
         },
         IMAGE_BASE_URL: 'src\\images',
         SELECTOR: {
-            CURRENT_MOVES: '.current-moves'
+            ATTEMPTS_NUMBER: '.attempts-number'
+        },
+        TEXT: {
+            ATTEMPTS: 'Attempts: '
         },
         TIME_FOR_FLIP: 500
     };
@@ -48,7 +53,7 @@ memoryCardGame.GameManager = function (params) {
 
     var imagePosition = 0;
 
-    var movesCounter = 0;
+    var attemptsCounter = 0;
 
     var flippedOverCards = [];
 
@@ -97,8 +102,15 @@ memoryCardGame.GameManager = function (params) {
 
     var drawCurrentStats = function(rootNode) {
         var statsContainer = $('<div></div>').addClass(CONST.CSS.CURRENT_STATS_CONTAINER);
-        var currentMoves = $('<div></div>').addClass(CONST.CSS.CURRENT_MOVES);
+
+        var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
+        var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
+        var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER).text(attemptsCounter);
+        currentMoves.append(attemptsText);
+        currentMoves.append(attemptsNumber);
+
         statsContainer.append(currentMoves);
+
         rootNode.append(statsContainer);
     };
 
@@ -155,8 +167,8 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var increaseMovesCounter = function() {
-        movesCounter++;
-        $(CONST.SELECTOR.CURRENT_MOVES).text(movesCounter);
+        attemptsCounter++;
+        $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(attemptsCounter);
     };
 
     this.onCardSelected = function (card) {
