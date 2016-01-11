@@ -62,9 +62,9 @@ memoryCardGame.Card = function(params){
 		var cardNode = $(CONST.HTML.CARD_NODE);
 		cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
 		cardNode.click(function(){
-			if(discovered === false) {
+			if(config.flipped === false) {
 				flip(cardNode);
-				if(config.flipped === true) {
+				if(discovered === false) {
 					config.gameManager.onCardSelected(self);
 				}
 			}
