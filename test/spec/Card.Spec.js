@@ -1,6 +1,6 @@
-'use strict';
-
 describe('Card', function() {
+
+    'use strict';
 
     it('Exists', function(){
         expect(memoryCardGame.Card).toBeDefined();
