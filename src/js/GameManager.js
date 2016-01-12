@@ -6,13 +6,13 @@ memoryCardGame.GameManager = function (params) {
 
     var CONST = {
         CSS: {
-            ROOT: 'memory-board',
+            ROOT: 'memory-card-game',
+            BOARD_CLASS: 'memory-board',
             CARDS_CLASS: 'memory-cards',
             CURRENT_STATS_CONTAINER: 'current-stats-container',
             ATTEMPTS: 'attempts',
             ATTEMPTS_TEXT: 'attempts-text',
             ATTEMPTS_NUMBER: 'attempts-number',
-            GAME_CLASS: 'memory-card-game',
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
@@ -38,7 +38,7 @@ memoryCardGame.GameManager = function (params) {
 
     var config = {
         cardsClass: CONST.CSS.CARDS_CLASS,
-        gameClass: CONST.CSS.GAME_CLASS,
+        gameClass: CONST.CSS.ROOT,
         singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
     };
 

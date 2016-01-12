@@ -7,7 +7,7 @@ beforeEach(function() {
 
     CONST = {
         CSS: {
-            ROOT: 'memory-board',
+            ROOT: 'memory-card-game',
             CARDS_CLASS: 'memory-cards'
         },
         SELECTOR: {
@@ -27,8 +27,11 @@ describe('GameManager', function() {
 
     describe('it\'s container property:', function() {
 
-        it('is a jQuery object holding the HTML node that contains all the elements to play', function() {
+        it('is a jQuery object holding the HTML node that contains all the elements for you to play', function() {
             expect(gameManager.container).toExist();
+        });
+        it('is associated to the "memory-board" CSS class', function() {
+            expect(gameManager.container).toHaveClass(CONST.CSS.ROOT);
         });
     });
 
