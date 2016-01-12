@@ -57,9 +57,12 @@ memoryCardGame.GameManager = function (params) {
 
     var flippedOverCards = [];
 
-    var self = this;
+    //TODO: Replace id with a class
+    this.container = $('<div></div>').attr('id', config.gameId);
 
     var timer = 0;
+
+    var self = this;
 
     var init = function () {
         imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
@@ -94,13 +97,12 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var draw = function () {
-        //TODO: Replace id with a class
-        var memoryCardGame = $('#' + config.gameId);
-        drawCurrentStats(memoryCardGame);
-        drawCards(memoryCardGame);
+        drawCurrentStats();
+        drawCards();
+        $('body').append(self.container);
     };
 
-    var drawCurrentStats = function(rootNode) {
+    var drawCurrentStats = function() {
         var statsContainer = $('<div></div>').addClass(CONST.CSS.CURRENT_STATS_CONTAINER);
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
@@ -111,16 +113,16 @@ memoryCardGame.GameManager = function (params) {
 
         statsContainer.append(currentMoves);
 
-        rootNode.append(statsContainer);
+        self.container.append(statsContainer);
     };
 
-    var drawCards = function(rootNode) {
+    var drawCards = function() {
         var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
         for (var i = 0; i < cards.length; i++) {
             var cardNode = cards[i].getNode();
             cardList.append(cardNode);
         }
-        rootNode.append(cardList);
+        self.container.append(cardList);
     };
 
     var coverCards = function (flippedOverCards) {
