@@ -5,14 +5,14 @@ memoryCardGame.GameManager = function (params) {
     'use strict';
 
     var CONST = {
-        GAME_ID: 'memoryCardGame',
         CSS: {
-            BOARD_CLASS: 'memory-board',
+            ROOT: 'memory-board',
             CARDS_CLASS: 'memory-cards',
             CURRENT_STATS_CONTAINER: 'current-stats-container',
             ATTEMPTS: 'attempts',
             ATTEMPTS_TEXT: 'attempts-text',
             ATTEMPTS_NUMBER: 'attempts-number',
+            GAME_CLASS: 'memory-card-game',
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
@@ -38,7 +38,7 @@ memoryCardGame.GameManager = function (params) {
 
     var config = {
         cardsClass: CONST.CSS.CARDS_CLASS,
-        gameId: CONST.GAME_ID,
+        gameClass: CONST.CSS.GAME_CLASS,
         singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
     };
 
@@ -57,7 +57,7 @@ memoryCardGame.GameManager = function (params) {
 
     var flippedOverCards = [];
 
-    this.container = $('<div></div>');
+    this.container = $('<div></div>').addClass(config.gameClass);
 
     var timer = 0;
 
