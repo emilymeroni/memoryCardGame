@@ -8,12 +8,19 @@ var fs = require("fs");
 var header = require("gulp-header");
 var rename = require("gulp-rename");
 var runSequence = require("run-sequence");
+var sass = require("gulp-sass");
 var sourcemaps = require("gulp-sourcemaps");
 var uglify = require("gulp-uglify");
 var zip = require("gulp-zip");
 var karmaServer = require("karma").Server;
 
 var pkg = require("./package.json");
+
+var CONST = {
+	SRC_FOLDER: "src",
+	DIST_FOLDER: "dist",
+	SCSS_FOLDER: "src/sass/*.scss",
+};
 
 /* Tasks */
 
@@ -22,4 +29,26 @@ gulp.task("coverage", function (done) {
 	new karmaServer({
 		configFile: __dirname + "/test/karma.conf.js"
 	}, done).start();
+});
+
+gulp.task("scss", function(){
+	gulp.src(CONST.SCSS_FOLDER)
+			.pipe(sourcemaps.init())
+			.pipe(sass.sync().on("error", sass.logError))
+			.pipe(sourcemaps.write("."))
+			.pipe(gulp.dest(CONST.DIST_FOLDER));
+});
+
+gulp.task("default", function(callback){
+	runSequence(
+			"scss",
+			function(error){
+				if(error){
+					console.log(error.message);
+				}
+				else{
+					console.log("BUILD FINISHED SUCCESSFULLY");
+				}
+				callback(error);
+			});
 });

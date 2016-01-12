@@ -1,0 +1,17 @@
+.memory-card {
+  background: repeating-linear-gradient(60deg, #33ACFF, #33acff 15px, #C0DCEF 0, #C0DCEF 30px);
+  border: 1px solid #33ACFF;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, .6);
+  box-sizing: border-box;
+  float: left;
+  height: 300px;
+  list-style: none;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  width: 200px;
+}
+
+.memory-card > img {
+  height: 100%;
+  width: 100%;
+}
