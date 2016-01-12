@@ -57,8 +57,7 @@ memoryCardGame.GameManager = function (params) {
 
     var flippedOverCards = [];
 
-    //TODO: Replace id with a class
-    this.container = $('<div></div>').attr('id', config.gameId);
+    this.container = $('<div></div>');
 
     var timer = 0;
 
