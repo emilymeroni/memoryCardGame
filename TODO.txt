@@ -1,6 +1,6 @@
 - Add visual feedback on card selection (music also)
 - Create a card map to quickly find a card by its id
-- Introduce grunt or gulp to concatenate, minified, zipped
+- Concatenate, minified, zipped with Gulp
 - Improve Jasmine tests
 - Add jsDocs
 - Create documentation
