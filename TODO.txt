@@ -14,7 +14,6 @@
 - Validate user input (minimum card number, too many cards)
 - Insert a timer
 - Configurable number of cards to display on the grid
-- Persist in localStorage (score value..)  
 - Pick the number of copies
 - Solo or two player game
 - Allow multiple instances of GameManager
