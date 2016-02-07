@@ -59,18 +59,21 @@ memoryCardGame.GameManager = function (params) {
 
     var attemptsCounter = 0;
 
-    var bestScoreCounter = localStorage.getItem("bestScore");
-
     var flippedOverCards = [];
 
     this.container = $('<div></div>').addClass(config.gameClass);
 
     var timer = 0;
 
+    var persistentData = {
+        bestScoreCounter: null
+    };
+
     var self = this;
 
     var init = function () {
         imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
+        retrieveLocalStorage();
         prepareCards();
         shuffleCards();
         draw();
@@ -96,7 +99,7 @@ memoryCardGame.GameManager = function (params) {
 
     var setDiscoveredCards = function (flippedOverCards) {
         for (var i = 0; i < flippedOverCards.length; i++) {
-           flippedOverCards[i].setDiscovered();
+            flippedOverCards[i].setDiscovered();
         }
         discoveredSameCards++;
     };
@@ -107,7 +110,7 @@ memoryCardGame.GameManager = function (params) {
         $('body').append(self.container);
     };
 
-    var drawCurrentStats = function() {
+    var drawCurrentStats = function () {
         var statsContainer = $('<div></div>').addClass(CONST.CSS.CURRENT_STATS_CONTAINER);
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
@@ -119,10 +122,10 @@ memoryCardGame.GameManager = function (params) {
 
         statsContainer.append(currentMoves);
 
-        if(bestScoreCounter !== null) {
+        if (persistentData.bestScoreCounter !== null) {
             var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
             var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER).text(bestScoreCounter);
+            var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER).text(persistentData.bestScoreCounter);
 
             bestScore.append(bestScoreText);
             bestScore.append(bestScoreNumber);
@@ -132,7 +135,7 @@ memoryCardGame.GameManager = function (params) {
         self.container.append(statsContainer);
     };
 
-    var drawCards = function() {
+    var drawCards = function () {
         var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
         for (var i = 0; i < cards.length; i++) {
             var cardNode = cards[i].getNode();
@@ -144,15 +147,17 @@ memoryCardGame.GameManager = function (params) {
     var coverCards = function (flippedOverCards) {
         setTimeout(function () {
             for (var i = 0; i < flippedOverCards.length; i++) {
-               flippedOverCards[i].getCardNodeAndFlip();
+                flippedOverCards[i].getCardNodeAndFlip();
             }
         }, CONST.TIME_FOR_FLIP);
     };
 
     //TODO: Cleanup timer
-    var endGame = function() {
-        if(bestScoreCounter === null || attemptsCounter < bestScoreCounter) {
-            localStorage.setItem("bestScore", attemptsCounter);
+    var endGame = function () {
+        if ((persistentData.bestScoreCounter === null || attemptsCounter < persistentData.bestScoreCounter)) {
+            persistentData.bestScoreCounter = attemptsCounter;
+            persistInLocalStorage();
+
         }
     };
 
@@ -183,13 +188,24 @@ memoryCardGame.GameManager = function (params) {
         return flippedOverCards[flippedOverCards.length - 2];
     };
 
-    var isGameEnded = function() {
+    var isGameEnded = function () {
         return discoveredSameCards * CONST.CARD_COPIES === cards.length;
     };
 
-    var increaseMovesCounter = function() {
+    var increaseMovesCounter = function () {
         attemptsCounter++;
         $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(attemptsCounter);
+    };
+
+    var persistInLocalStorage = function () {
+        localStorage.setItem('memoryCardGame', JSON.stringify(persistentData));
+    };
+
+    var retrieveLocalStorage = function () {
+        var memoryLocalStorage = JSON.parse(localStorage.getItem('memoryCardGame'));
+        if (memoryLocalStorage !== null) {
+            persistentData = memoryLocalStorage;
+        }
     };
 
     this.onCardSelected = function (card) {
@@ -202,7 +218,7 @@ memoryCardGame.GameManager = function (params) {
                 setDiscoveredCards(flippedOverCards);
                 flippedOverCards = [];
                 increaseMovesCounter();
-                if(isGameEnded() === true) {
+                if (isGameEnded() === true) {
                     endGame();
                 }
             }
