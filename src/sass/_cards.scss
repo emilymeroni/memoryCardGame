@@ -1,10 +1,11 @@
 .memory-card {
   background: repeating-linear-gradient(60deg, #33ACFF, #33acff 15px, #C0DCEF 0, #C0DCEF 30px);
   border: 1px solid #33ACFF;
+  border-radius: 10px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, .6);
   box-sizing: border-box;
   float: left;
-  height: 300px;
+  height: 200px;
   list-style: none;
   margin-bottom: 10px;
   margin-right: 10px;
