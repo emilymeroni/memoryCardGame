@@ -14,6 +14,9 @@ memoryCardGame.Stats = function(params){
             ATTEMPTS_TEXT: 'attempts-text',
             ATTEMPTS_NUMBER: 'attempts-number'
         },
+        SELECTOR: {
+            ATTEMPTS_NUMBER: '.attempts-number'
+        },
         TEXT: {
             ATTEMPTS: 'Attempts: ',
             BEST_SCORE: 'Best score: '
@@ -37,10 +40,10 @@ memoryCardGame.Stats = function(params){
     var self = this;
 
     var init = function () {
-        drawCurrentStats();
+        draw();
     };
 
-    var drawCurrentStats = function () {
+    var draw = function () {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
@@ -60,6 +63,12 @@ memoryCardGame.Stats = function(params){
             bestScore.append(bestScoreNumber);
             self.container.append(bestScore);
         }
+    };
+
+    this.updateAttemptsCounter = function() {
+        config.attempts++;
+        $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+
     };
 
     init.call(this);

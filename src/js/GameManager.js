@@ -23,9 +23,6 @@ memoryCardGame.GameManager = function (params) {
             CARD_LIST: '<ul></ul>'
         },
         IMAGE_BASE_URL: 'src\\images',
-        SELECTOR: {
-            ATTEMPTS_NUMBER: '.attempts-number'
-        },
         TIME_FOR_FLIP: 500
     };
 
@@ -163,11 +160,6 @@ memoryCardGame.GameManager = function (params) {
         return discoveredSameCards * CONST.CARD_COPIES === cards.length;
     };
 
-    var increaseMovesCounter = function () {
-        attemptsCounter++;
-        $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(attemptsCounter);
-    };
-
     this.onCardSelected = function (card) {
         flippedOverCards.push(card);
         if (flippedOverCards.length <= 1) {
@@ -177,7 +169,7 @@ memoryCardGame.GameManager = function (params) {
             if (flippedOverCards.length === CONST.CARD_COPIES) {
                 setDiscoveredCards(flippedOverCards);
                 flippedOverCards = [];
-                increaseMovesCounter();
+                stats.updateAttemptsCounter();
                 if (isGameEnded() === true) {
                     endGame();
                 }
@@ -186,7 +178,7 @@ memoryCardGame.GameManager = function (params) {
         else {
             coverCards(flippedOverCards);
             flippedOverCards = [];
-            increaseMovesCounter();
+            stats.updateAttemptsCounter();
         }
     };
 
