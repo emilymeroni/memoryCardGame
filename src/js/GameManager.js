@@ -7,15 +7,8 @@ memoryCardGame.GameManager = function (params) {
     var CONST = {
         CSS: {
             ROOT: 'memory-card-game',
-            BEST_SCORE: 'best-score',
-            BEST_SCORE_TEXT: 'best-score-text',
-            BEST_SCORE_NUMBER: 'best-score-number',
             BOARD_CLASS: 'memory-board',
             CARDS_CLASS: 'memory-cards',
-            CURRENT_STATS_CONTAINER: 'current-stats-container',
-            ATTEMPTS: 'attempts',
-            ATTEMPTS_TEXT: 'attempts-text',
-            ATTEMPTS_NUMBER: 'attempts-number',
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
@@ -32,10 +25,6 @@ memoryCardGame.GameManager = function (params) {
         IMAGE_BASE_URL: 'src\\images',
         SELECTOR: {
             ATTEMPTS_NUMBER: '.attempts-number'
-        },
-        TEXT: {
-            ATTEMPTS: 'Attempts: ',
-            BEST_SCORE: 'Best score: '
         },
         TIME_FOR_FLIP: 500
     };
@@ -63,6 +52,8 @@ memoryCardGame.GameManager = function (params) {
 
     this.container = $('<div></div>').addClass(config.gameClass);
 
+    var stats;
+
     var timer = 0;
 
     var persistentData = {
@@ -72,8 +63,12 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
         retrieveLocalStorage();
+        stats = new memoryCardGame.Stats({
+            bestScoreCounter: persistentData.bestScoreCounter
+        });
+        self.container.append(stats.container);
+        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
         prepareCards();
         shuffleCards();
         draw();
@@ -105,34 +100,8 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var draw = function () {
-        drawCurrentStats();
         drawCards();
         $('body').append(self.container);
-    };
-
-    var drawCurrentStats = function () {
-        var statsContainer = $('<div></div>').addClass(CONST.CSS.CURRENT_STATS_CONTAINER);
-
-        var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
-        var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-        var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER).text(attemptsCounter);
-
-        currentMoves.append(attemptsText);
-        currentMoves.append(attemptsNumber);
-
-        statsContainer.append(currentMoves);
-
-        if (persistentData.bestScoreCounter !== null) {
-            var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
-            var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER).text(persistentData.bestScoreCounter);
-
-            bestScore.append(bestScoreText);
-            bestScore.append(bestScoreNumber);
-            statsContainer.append(bestScore);
-        }
-
-        self.container.append(statsContainer);
     };
 
     var drawCards = function () {
@@ -157,7 +126,6 @@ memoryCardGame.GameManager = function (params) {
         if ((persistentData.bestScoreCounter === null || attemptsCounter < persistentData.bestScoreCounter)) {
             persistentData.bestScoreCounter = attemptsCounter;
             persistInLocalStorage();
-
         }
     };
 
