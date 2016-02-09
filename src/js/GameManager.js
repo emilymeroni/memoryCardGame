@@ -63,7 +63,10 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        retrieveLocalStorage();
+        var memoryLocalStorage = memoryCardGame.utils.retrieveFromLocalStorage();
+        if (memoryLocalStorage !== null) {
+            persistentData = memoryLocalStorage;
+        }
         stats = new memoryCardGame.Stats({
             bestScoreCounter: persistentData.bestScoreCounter
         });
@@ -125,7 +128,7 @@ memoryCardGame.GameManager = function (params) {
     var endGame = function () {
         if ((persistentData.bestScoreCounter === null || attemptsCounter < persistentData.bestScoreCounter)) {
             persistentData.bestScoreCounter = attemptsCounter;
-            persistInLocalStorage();
+            memoryCardGame.utils.persistInLocalStorage(persistentData);
         }
     };
 
@@ -163,17 +166,6 @@ memoryCardGame.GameManager = function (params) {
     var increaseMovesCounter = function () {
         attemptsCounter++;
         $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(attemptsCounter);
-    };
-
-    var persistInLocalStorage = function () {
-        localStorage.setItem('memoryCardGame', JSON.stringify(persistentData));
-    };
-
-    var retrieveLocalStorage = function () {
-        var memoryLocalStorage = JSON.parse(localStorage.getItem('memoryCardGame'));
-        if (memoryLocalStorage !== null) {
-            persistentData = memoryLocalStorage;
-        }
     };
 
     this.onCardSelected = function (card) {
