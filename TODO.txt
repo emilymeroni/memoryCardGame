@@ -6,7 +6,7 @@
 - Create documentation
 - Import JsHint configuration into project
 - Use EventListener to communicate between Card and GameManager
-
+- Integrate SCSS-lint
 - Create a GUI for the user to configure properties of the game
 - Allow to pass over another class to the main wrapper for skinning
 - Allow the user to select a skin for the game
