@@ -8,3 +8,21 @@
   margin: 0;
   padding: 0;
 }
+
+.current-stats-container {
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+}
+
+.attempts,
+.best-score {
+  display: inline-block;
+  border: 2px solid #C0DCEF;
+  padding: 5px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-right: 10px;
+  background-color: #33acff;
+  color: white;
+}

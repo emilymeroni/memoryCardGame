@@ -366,6 +366,21 @@ th {
   margin: 0;
   padding: 0; }
 
+.current-stats-container {
+  margin-top: 5px;
+  margin-bottom: 5px; }
+
+.attempts,
+.best-score {
+  display: inline-block;
+  border: 2px solid #C0DCEF;
+  padding: 5px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-right: 10px;
+  background-color: #33acff;
+  color: white; }
+
 .memory-card {
   background: repeating-linear-gradient(60deg, #33ACFF, #33acff 15px, #C0DCEF 0, #C0DCEF 30px);
   border: 1px solid #33ACFF;
@@ -377,6 +392,7 @@ th {
   list-style: none;
   margin-bottom: 10px;
   margin-right: 10px;
+  overflow: hidden;
   width: 200px; }
 
 .memory-card > img {
