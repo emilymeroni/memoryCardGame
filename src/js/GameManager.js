@@ -123,10 +123,7 @@ memoryCardGame.GameManager = function (params) {
 
     //TODO: Cleanup timer
     var endGame = function () {
-        if ((persistentData.bestScoreCounter === null || attemptsCounter < persistentData.bestScoreCounter)) {
-            persistentData.bestScoreCounter = attemptsCounter;
-            memoryCardGame.utils.persistInLocalStorage(persistentData);
-        }
+        stats.saveStats();
     };
 
     var getImage = function () {

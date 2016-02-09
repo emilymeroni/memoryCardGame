@@ -68,7 +68,12 @@ memoryCardGame.Stats = function(params){
     this.updateAttemptsCounter = function() {
         config.attempts++;
         $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+    };
 
+    this.saveStats = function() {
+        if ((config.bestScoreCounter === null || config.attempts < config.bestScoreCounter)) {
+            memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: config.attempts});
+        }
     };
 
     init.call(this);
