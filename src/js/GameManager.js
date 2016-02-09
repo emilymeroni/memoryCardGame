@@ -7,22 +7,9 @@ memoryCardGame.GameManager = function (params) {
     var CONST = {
         CSS: {
             ROOT: 'memory-card-game',
-            BOARD_CLASS: 'memory-board',
-            CARDS_CLASS: 'memory-cards',
-            SINGLE_CARD_CLASS: 'memory-card'
+            BOARD_CLASS: 'memory-board'
         },
         CARD_COPIES: 2,
-        DEFAULT_IMAGES: [
-            'Hydrangeas.jpg',
-            'Jellyfish.jpg',
-            'Koala.jpg',
-            'Penguins.jpg',
-            'Tulips.jpg'
-        ],
-        HTML: {
-            CARD_LIST: '<ul></ul>'
-        },
-        IMAGE_BASE_URL: 'src\\images',
         TIME_FOR_FLIP: 500
     };
 
@@ -35,19 +22,11 @@ memoryCardGame.GameManager = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
-    var cards = [];
-
     var discoveredSameCards = 0;
-
-    var imageMap = [];
-
-    var imagePosition = 0;
-
-    var attemptsCounter = 0;
 
     var flippedOverCards = [];
 
-    this.container = $('<div></div>').addClass(config.gameClass);
+    var deck;
 
     var stats;
 
@@ -56,6 +35,8 @@ memoryCardGame.GameManager = function (params) {
     var persistentData = {
         bestScoreCounter: null
     };
+
+    this.container = $('<div></div>').addClass(config.gameClass);
 
     var self = this;
 
@@ -68,28 +49,16 @@ memoryCardGame.GameManager = function (params) {
             bestScoreCounter: persistentData.bestScoreCounter
         });
         self.container.append(stats.container);
-        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-        prepareCards();
-        shuffleCards();
-        draw();
+
+        deck = new memoryCardGame.Deck({
+            gameManager: self,
+            cardsClass: config.cardsClass,
+            singleCardClass: config.singleCardClass
+        });
+        self.container.append(deck.container);
+
+        $('body').append(self.container);
         startTimer();
-    };
-
-    var changeImagePosition = function () {
-        imagePosition++;
-    };
-
-    //TODO Base loop on imageMap size
-    var createSameCards = function () {
-        for (var i = 0; i < CONST.CARD_COPIES; i++) {
-            var card = new memoryCardGame.Card({
-                id: cards.length,
-                image: getImage(),
-                gameManager: self
-            });
-            cards.push(card);
-        }
-        changeImagePosition();
     };
 
     var setDiscoveredCards = function (flippedOverCards) {
@@ -97,20 +66,6 @@ memoryCardGame.GameManager = function (params) {
             flippedOverCards[i].setDiscovered();
         }
         discoveredSameCards++;
-    };
-
-    var draw = function () {
-        drawCards();
-        $('body').append(self.container);
-    };
-
-    var drawCards = function () {
-        var cardList = $(CONST.HTML.CARD_LIST).addClass(config.cardsClass);
-        for (var i = 0; i < cards.length; i++) {
-            var cardNode = cards[i].getNode();
-            cardList.append(cardNode);
-        }
-        self.container.append(cardList);
     };
 
     var coverCards = function (flippedOverCards) {
@@ -126,22 +81,6 @@ memoryCardGame.GameManager = function (params) {
         stats.saveStats();
     };
 
-    var getImage = function () {
-        return CONST.IMAGE_BASE_URL + '\\' + imageMap[imagePosition];
-    };
-
-    var prepareCards = function () {
-        for (var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-            createSameCards();
-        }
-    };
-
-    var shuffleCards = function () {
-        cards = cards.sort(function () {
-            return 0.5 - Math.random();
-        });
-    };
-
     //TODO: Change interval milliseconds to constant
     var startTimer = function () {
         setInterval(function () {
@@ -154,7 +93,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var isGameEnded = function () {
-        return discoveredSameCards * CONST.CARD_COPIES === cards.length;
+        return discoveredSameCards * CONST.CARD_COPIES === deck.getCardsNumber();
     };
 
     this.onCardSelected = function (card) {
