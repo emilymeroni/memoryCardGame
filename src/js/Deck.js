@@ -33,43 +33,27 @@ memoryCardGame.Deck = function(params){
 
     var imageMap = [];
 
-    var imagePosition = 0;
-
     this.container = $('<ul></ul>').addClass(config.cardsClass);
 
     var self = this;
 
     var init = function () {
         imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
-        prepareCards();
+        createCards();
         shuffleCards();
         drawCards();
     };
 
-    //TODO Base loop on imageMap size
-    var createSameCards = function () {
-        for (var i = 0; i < CONST.CARD_COPIES; i++) {
-            var card = new memoryCardGame.Card({
-                id: cards.length,
-                image: getImage(),
-                gameManager: config.gameManager
-            });
-            cards.push(card);
-        }
-        changeImagePosition();
-    };
-
-    var changeImagePosition = function () {
-        imagePosition++;
-    };
-
-    var getImage = function () {
-        return CONST.IMAGE_BASE_URL + '\\' + imageMap[imagePosition];
-    };
-
-    var prepareCards = function () {
-        for (var i = 0; i < CONST.DEFAULT_IMAGES.length; i++) {
-            createSameCards();
+    var createCards = function() {
+        for (var i = 0; i < imageMap.length; i++) {
+            for (var j = 0; j < CONST.CARD_COPIES; j++) {
+                var card = new memoryCardGame.Card({
+                    id: cards.length,
+                    image: CONST.IMAGE_BASE_URL + '\\' + imageMap[i],
+                    gameManager: config.gameManager
+                });
+                cards.push(card);
+            }
         }
     };
 

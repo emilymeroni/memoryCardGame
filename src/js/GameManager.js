@@ -55,6 +55,7 @@ memoryCardGame.GameManager = function (params) {
             cardsClass: config.cardsClass,
             singleCardClass: config.singleCardClass
         });
+
         self.container.append(deck.container);
 
         $('body').append(self.container);
