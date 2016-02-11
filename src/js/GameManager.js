@@ -99,11 +99,11 @@ memoryCardGame.GameManager = function (params) {
 
     this.onCardSelected = function (card) {
         flippedOverCards.push(card);
-        if (flippedOverCards.length <= 1) {
+        if (flippedOverCards.length % CONST.CARD_COPIES === 1) {
             return;
         }
         if (getPreviousCardFromDeck().getImage() === card.getImage()) {
-            if (flippedOverCards.length === CONST.CARD_COPIES) {
+            if (flippedOverCards.length % CONST.CARD_COPIES === 0) {
                 setDiscoveredCards(flippedOverCards);
                 flippedOverCards = [];
                 stats.updateAttemptsCounter();
