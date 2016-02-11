@@ -19,8 +19,39 @@ var pkg = require("./package.json");
 var CONST = {
 	SRC_FOLDER: "src",
 	DIST_FOLDER: "dist",
-	SCSS_FOLDER: "src/sass/*.scss",
+	DIST_FILENAME_JS: "memoryCardGame.js",
+	MIN_SUFFIX: ".min.js",
+	JS_SOURCE_FILES: [
+		"src/js/core.js",
+		"src/js/utils.js",
+		"src/js/Deck.js",
+		"src/js/Card.js",
+		"src/js/Stats.js",
+		"src/js/GameManager.js",
+		"src/js/UserOptions.js"
+	],
+	SCSS_FOLDER: "src/sass/*.scss"
 };
+
+function concatAndMinify(src, fileName){
+	return gulp.src(src)
+			.pipe(sourcemaps.init())
+			.pipe(concat(fileName))
+			// The "changed" task needs to know the destination directory upfront
+			.pipe(changed(CONST.DIST_FOLDER))
+			.pipe(gulp.dest(CONST.DIST_FOLDER))
+			.pipe(rename({
+				extname: CONST.MIN_SUFFIX
+			}))
+			.pipe(uglify({
+				mangle: false
+			}))
+			.pipe(sourcemaps.write(".", {
+				includeContent: true,
+				sourceRoot: "."
+			}))
+			.pipe(gulp.dest(CONST.DIST_FOLDER));
+}
 
 /* Tasks */
 
@@ -39,8 +70,13 @@ gulp.task("scss", function(){
 			.pipe(gulp.dest(CONST.DIST_FOLDER));
 });
 
+gulp.task("dist", function() {
+	concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
+});
+
 gulp.task("default", function(callback){
 	runSequence(
+			"dist",
 			"scss",
 			function(error){
 				if(error){
