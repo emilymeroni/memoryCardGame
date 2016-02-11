@@ -12,10 +12,8 @@ window.memoryCardGame.utils = {};
 
     memoryCardGame.utils.addDataInLocalStorage = function (data) {
         var persistedData = memoryCardGame.utils.retrieveFromLocalStorage();
-        if (persistedData !== null) {
-            $.extend( persistedData, data );
-        }
-        memoryCardGame.utils.persistInLocalStorage(persistedData);
+        var mergedData = $.extend({}, persistedData, data);
+        memoryCardGame.utils.persistInLocalStorage(mergedData);
     };
 
         memoryCardGame.utils.retrieveFromLocalStorage = function () {
