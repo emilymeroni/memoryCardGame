@@ -68,8 +68,10 @@ memoryCardGame.GameManager = function (params) {
 
     var coverCards = function (flippedOverCards) {
         setTimeout(function () {
-            for (var i = 1; i <= CONST.CARD_COPIES; i++) {
-                flippedOverCards[flippedOverCards.length - i].getCardNodeAndFlip();
+            for (var i = 0; i < CONST.CARD_COPIES; i++) {
+                var lastElement = flippedOverCards.length - 1;
+                lastElement.getCardNodeAndFlip();
+                flippedOverCards.splice(lastElement, 1);
             }
         }, CONST.TIME_FOR_FLIP);
     };
