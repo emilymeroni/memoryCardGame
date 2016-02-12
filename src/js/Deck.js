@@ -10,6 +10,7 @@ memoryCardGame.Deck = function(params){
             SINGLE_CARD_CLASS: 'memory-card'
         },
         CARD_COPIES: 2,
+        TIME_FOR_FLIP: 500,
         DEFAULT_IMAGES: [
             'Hydrangeas.jpg',
             'Jellyfish.jpg',
@@ -30,6 +31,8 @@ memoryCardGame.Deck = function(params){
     $.extend(config, params);
 
     var cards = [];
+
+    var flippedCards = [];
 
     var imageMap = [];
 
@@ -70,8 +73,47 @@ memoryCardGame.Deck = function(params){
         }
     };
 
+    this.getPreviousFlippedCard = function()  {
+        return flippedCards[flippedCards.length - 2];
+    };
+
+    this.addFlippedCard = function (card) {
+        return flippedCards.push(card);
+    };
+
+    this.isNewHandStarted = function () {
+        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
+    };
+
+    this.isHandFinished = function () {
+        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
+    };
+
+    this.isAllCardsFlipped = function () {
+        return self.getFlippedCardsNumber() === self.getCardsNumber();
+    };
+
+    this.setDiscoveredCards = function () {
+        for (var i = 1; i <= CONST.CARD_COPIES; i++) {
+            flippedCards[flippedCards.length - i].setDiscovered();
+        }
+    };
+
+    this.getFlippedCardsNumber = function () {
+        return flippedCards.length;
+    };
+
     this.getCardsNumber = function() {
         return cards.length;
+    };
+
+    this.coverLatestHandFlippedCards = function () {
+        setTimeout(function () {
+            for (var i = 0; i < CONST.CARD_COPIES; i++) {
+                flippedCards[self.getFlippedCardsNumber() - 1].getCardNodeAndFlip();
+                flippedCards.pop();
+            }
+        }, CONST.TIME_FOR_FLIP);
     };
 
     init.call(this);

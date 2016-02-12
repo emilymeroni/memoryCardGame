@@ -8,9 +8,7 @@ memoryCardGame.GameManager = function (params) {
         CSS: {
             ROOT: 'memory-card-game',
             BOARD_CLASS: 'memory-board'
-        },
-        CARD_COPIES: 2,
-        TIME_FOR_FLIP: 500
+        }
     };
 
     var config = {
@@ -21,8 +19,6 @@ memoryCardGame.GameManager = function (params) {
 
     // Merge incoming params with internal config
     $.extend(config, params);
-
-    var flippedOverCards = [];
 
     var deck;
 
@@ -60,21 +56,6 @@ memoryCardGame.GameManager = function (params) {
         startTimer();
     };
 
-    var setDiscoveredCards = function (flippedOverCards) {
-        for (var i = 1; i <= CONST.CARD_COPIES; i++) {
-            flippedOverCards[flippedOverCards.length - i].setDiscovered();
-        }
-    };
-
-    var coverCards = function (flippedOverCards) {
-        setTimeout(function () {
-            for (var i = 0; i < CONST.CARD_COPIES; i++) {
-                flippedOverCards[flippedOverCards.length - 1].getCardNodeAndFlip();
-                flippedOverCards.pop();
-            }
-        }, CONST.TIME_FOR_FLIP);
-    };
-
     //TODO: Cleanup timer
     var endGame = function () {
         stats.saveStats();
@@ -87,22 +68,18 @@ memoryCardGame.GameManager = function (params) {
         }, 1000);
     };
 
-    var getPreviousCardFromDeck = function () {
-        return flippedOverCards[flippedOverCards.length - 2];
-    };
-
     var isGameEnded = function () {
-        return flippedOverCards.length === deck.getCardsNumber();
+        return deck.isAllCardsFlipped();
     };
 
     this.onCardSelected = function (card) {
-        flippedOverCards.push(card);
-        if (flippedOverCards.length % CONST.CARD_COPIES === 1) {
+        deck.addFlippedCard(card);
+        if (deck.isNewHandStarted()) {
             return;
         }
-        if (getPreviousCardFromDeck().getImage() === card.getImage()) {
-            if (flippedOverCards.length % CONST.CARD_COPIES === 0) {
-                setDiscoveredCards(flippedOverCards);
+        if (deck.getPreviousFlippedCard().getImage() === card.getImage()) {
+            if (deck.isHandFinished()) {
+                deck.setDiscoveredCards();
                 stats.updateAttemptsCounter();
                 if (isGameEnded() === true) {
                     endGame();
@@ -110,7 +87,7 @@ memoryCardGame.GameManager = function (params) {
             }
         }
         else {
-            coverCards(flippedOverCards);
+            deck.coverLatestHandFlippedCards();
             stats.updateAttemptsCounter();
         }
     };
