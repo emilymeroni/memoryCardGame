@@ -22,8 +22,6 @@ memoryCardGame.GameManager = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
-    var discoveredSameCards = 0;
-
     var flippedOverCards = [];
 
     var deck;
@@ -63,16 +61,15 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var setDiscoveredCards = function (flippedOverCards) {
-        for (var i = 0; i < flippedOverCards.length; i++) {
-            flippedOverCards[i].setDiscovered();
+        for (var i = 1; i <= CONST.CARD_COPIES; i++) {
+            flippedOverCards[flippedOverCards.length - i].setDiscovered();
         }
-        discoveredSameCards++;
     };
 
     var coverCards = function (flippedOverCards) {
         setTimeout(function () {
-            for (var i = 0; i < flippedOverCards.length; i++) {
-                flippedOverCards[i].getCardNodeAndFlip();
+            for (var i = 1; i <= CONST.CARD_COPIES; i++) {
+                flippedOverCards[flippedOverCards.length - i].getCardNodeAndFlip();
             }
         }, CONST.TIME_FOR_FLIP);
     };
@@ -94,7 +91,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var isGameEnded = function () {
-        return discoveredSameCards * CONST.CARD_COPIES === deck.getCardsNumber();
+        return flippedOverCards.length === deck.getCardsNumber();
     };
 
     this.onCardSelected = function (card) {
@@ -105,7 +102,6 @@ memoryCardGame.GameManager = function (params) {
         if (getPreviousCardFromDeck().getImage() === card.getImage()) {
             if (flippedOverCards.length % CONST.CARD_COPIES === 0) {
                 setDiscoveredCards(flippedOverCards);
-                flippedOverCards = [];
                 stats.updateAttemptsCounter();
                 if (isGameEnded() === true) {
                     endGame();
@@ -114,7 +110,6 @@ memoryCardGame.GameManager = function (params) {
         }
         else {
             coverCards(flippedOverCards);
-            flippedOverCards = [];
             stats.updateAttemptsCounter();
         }
     };
