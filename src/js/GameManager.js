@@ -73,7 +73,7 @@ memoryCardGame.GameManager = function (params) {
 
     var startTimer = function () {
         timerInterval = setInterval(function () {
-            $(CONST.SELECTOR.TIMER_SELECTOR).text(timer++);
+            $(CONST.SELECTOR.TIMER_SELECTOR).text(++timer);
         }, CONST.TIMER);
     };
 

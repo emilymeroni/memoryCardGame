@@ -175,7 +175,7 @@ memoryCardGame.Deck = function(params){
 
     var imageMap = [];
 
-    this.container = $('<ul></ul>').addClass(config.cardsClass);
+    this.container = $('<ul></ul>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
@@ -519,7 +519,7 @@ memoryCardGame.GameManager = function (params) {
 
     var startTimer = function () {
         timerInterval = setInterval(function () {
-            $(CONST.SELECTOR.TIMER_SELECTOR).text(timer++);
+            $(CONST.SELECTOR.TIMER_SELECTOR).text(++timer);
         }, CONST.TIMER);
     };
 

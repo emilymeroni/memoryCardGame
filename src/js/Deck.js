@@ -42,7 +42,7 @@ memoryCardGame.Deck = function(params){
 
     var imageMap = [];
 
-    this.container = $('<ul></ul>').addClass(config.cardsClass);
+    this.container = $('<ul></ul>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
