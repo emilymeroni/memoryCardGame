@@ -381,6 +381,9 @@ th {
   background-color: #33acff;
   color: white; }
 
+.timer {
+  font-weight: bold; }
+
 .memory-card {
   background: repeating-linear-gradient(60deg, #33ACFF, #33acff 15px, #C0DCEF 0, #C0DCEF 30px);
   border: 1px solid #33ACFF;

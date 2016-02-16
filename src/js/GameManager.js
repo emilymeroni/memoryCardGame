@@ -60,7 +60,7 @@ memoryCardGame.GameManager = function (params) {
         deck.addObserver(self);
         self.container.append(deck.container);
 
-        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS));
+        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
 
         $('body').append(self.container);
         startTimer();

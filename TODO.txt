@@ -1,3 +1,4 @@
+- Improve UI
 - Add visual feedback on card selection (music also)
 - Create a card map to quickly find a card by its id
 - Improve Jasmine tests
