@@ -92,7 +92,7 @@ memoryCardGame.Deck = function(params){
     };
 
     var isAllCardsFlipped = function () {
-        return self.getFlippedCardsNumber() === self.getCardsNumber();
+        return getFlippedCardsNumber() === getCardsNumber();
     };
 
     var setDiscoveredCards = function () {
@@ -101,15 +101,13 @@ memoryCardGame.Deck = function(params){
         }
     };
 
-    this.getFlippedCardsNumber = function () {
+    var getFlippedCardsNumber = function () {
         return flippedCards.length;
     };
 
-    this.getCardsNumber = function() {
+    var getCardsNumber = function() {
         return cards.length;
     };
-
-    //TODO: Create onSuccess and onFailure to notify game manager and remove public methods
 
     var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
