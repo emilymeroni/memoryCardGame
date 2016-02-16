@@ -45,11 +45,11 @@ memoryCardGame.GameManager = function (params) {
         self.container.append(stats.container);
 
         deck = new memoryCardGame.Deck({
-            gameManager: self,
             cardsClass: config.cardsClass,
             singleCardClass: config.singleCardClass
         });
 
+        deck.addObserver(self);
         self.container.append(deck.container);
 
         $('body').append(self.container);
@@ -68,28 +68,16 @@ memoryCardGame.GameManager = function (params) {
         }, 1000);
     };
 
-    var isGameEnded = function () {
-        return deck.isAllCardsFlipped();
+    this.onHandFinishedRequestHandler = function() {
+        stats.updateAttemptsCounter();
     };
 
-    this.onCardSelected = function (card) {
-        deck.addFlippedCard(card);
-        if (deck.isNewHandStarted()) {
-            return;
-        }
-        if (deck.getPreviousFlippedCard().getImage() === card.getImage()) {
-            if (deck.isHandFinished()) {
-                deck.setDiscoveredCards();
-                stats.updateAttemptsCounter();
-                if (isGameEnded() === true) {
-                    endGame();
-                }
-            }
-        }
-        else {
-            deck.coverLatestHandFlippedCards();
-            stats.updateAttemptsCounter();
-        }
+    this.onHandInvalidRequestHandler = function() {
+        stats.updateAttemptsCounter();
+    };
+
+    this.onCardsAllFlippedRequestHandler = function() {
+        endGame();
     };
 
     init.call(this);

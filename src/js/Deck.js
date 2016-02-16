@@ -4,6 +4,8 @@ memoryCardGame.Deck = function(params){
 
     'use strict';
 
+    memoryCardGame.extend(memoryCardGame.Notifier, this);
+
     var CONST = {
         CSS: {
             ROOT: 'memory-cards',
@@ -18,11 +20,15 @@ memoryCardGame.Deck = function(params){
             'Penguins.jpg',
             'Tulips.jpg'
         ],
-        IMAGE_BASE_URL: 'src\\images'
+        IMAGE_BASE_URL: 'src\\images',
+        EVENT: {
+            HAND_FINISHED: 'handFinishedRequest',
+            HAND_INVALID: 'handInvalidRequest',
+            CARDS_ALL_FLIPPED: 'cardsAllFlippedRequest'
+        }
     };
 
     var config = {
-        gameManager: null,
         cardsClass: CONST.CSS.CARDS_CLASS,
         singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
     };
@@ -52,9 +58,9 @@ memoryCardGame.Deck = function(params){
             for (var j = 0; j < CONST.CARD_COPIES; j++) {
                 var card = new memoryCardGame.Card({
                     id: cards.length,
-                    image: CONST.IMAGE_BASE_URL + '\\' + imageMap[i],
-                    gameManager: config.gameManager
+                    image: CONST.IMAGE_BASE_URL + '\\' + imageMap[i]
                 });
+                card.addObserver(self);
                 cards.push(card);
             }
         }
@@ -73,27 +79,23 @@ memoryCardGame.Deck = function(params){
         }
     };
 
-    this.getPreviousFlippedCard = function()  {
+    var getPreviousFlippedCard = function()  {
         return flippedCards[flippedCards.length - 2];
     };
 
-    this.addFlippedCard = function (card) {
-        return flippedCards.push(card);
-    };
-
-    this.isNewHandStarted = function () {
+    var isNewHandStarted = function () {
         return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
     };
 
-    this.isHandFinished = function () {
+    var isHandFinished = function () {
         return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
     };
 
-    this.isAllCardsFlipped = function () {
+    var isAllCardsFlipped = function () {
         return self.getFlippedCardsNumber() === self.getCardsNumber();
     };
 
-    this.setDiscoveredCards = function () {
+    var setDiscoveredCards = function () {
         for (var i = 1; i <= CONST.CARD_COPIES; i++) {
             flippedCards[flippedCards.length - i].setDiscovered();
         }
@@ -107,13 +109,35 @@ memoryCardGame.Deck = function(params){
         return cards.length;
     };
 
-    this.coverLatestHandFlippedCards = function () {
+    //TODO: Create onSuccess and onFailure to notify game manager and remove public methods
+
+    var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
             for (var i = 0; i < CONST.CARD_COPIES; i++) {
                 flippedCards[self.getFlippedCardsNumber() - 1].getCardNodeAndFlip();
                 flippedCards.pop();
             }
         }, CONST.TIME_FOR_FLIP);
+    };
+
+    this.onSelectedCardRequestHandler = function(data) {
+        flippedCards.push(data.card);
+        if (isNewHandStarted()) {
+            return;
+        }
+        if (getPreviousFlippedCard().getImage() === data.card.getImage()) {
+            if (isHandFinished()) {
+                setDiscoveredCards();
+                self.notifyObservers(CONST.EVENT.HAND_FINISHED, {});
+                if (isAllCardsFlipped()) {
+                    self.notifyObservers(CONST.EVENT.CARDS_ALL_FLIPPED, {});
+                }
+            }
+        }
+        else {
+            coverLatestHandFlippedCards();
+            self.notifyObservers(CONST.EVENT.HAND_INVALID, {});
+        }
     };
 
     init.call(this);
