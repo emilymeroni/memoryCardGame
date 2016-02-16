@@ -121,11 +121,12 @@ memoryCardGame.Deck = function(params){
     };
 
     this.onSelectedCardHandler = function(data) {
-        flippedCards.push(data.card);
+        var card = data.card;
+        flippedCards.push(card);
         if (isNewHandStarted()) {
             return;
         }
-        if (getPreviousFlippedCard().getImage() === data.card.getImage()) {
+        if (getPreviousFlippedCard().getImage() === card.getImage()) {
             if (isHandFinished()) {
                 setDiscoveredCards();
                 self.notifyObservers(CONST.EVENT.HAND_FINISHED, {});
