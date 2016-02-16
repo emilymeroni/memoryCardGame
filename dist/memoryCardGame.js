@@ -155,9 +155,9 @@ memoryCardGame.Deck = function(params){
         ],
         IMAGE_BASE_URL: 'src\\images',
         EVENT: {
-            HAND_FINISHED: 'handFinishedRequest',
-            HAND_INVALID: 'handInvalidRequest',
-            CARDS_ALL_FLIPPED: 'cardsAllFlippedRequest'
+            HAND_FINISHED: 'handFinished',
+            HAND_INVALID: 'handInvalid',
+            CARDS_ALL_FLIPPED: 'cardsAllFlipped'
         }
     };
 
@@ -253,7 +253,7 @@ memoryCardGame.Deck = function(params){
         }, CONST.TIME_FOR_FLIP);
     };
 
-    this.onSelectedCardRequestHandler = function(data) {
+    this.onSelectedCardHandler = function(data) {
         flippedCards.push(data.card);
         if (isNewHandStarted()) {
             return;
@@ -297,7 +297,7 @@ memoryCardGame.Card = function (params) {
             IMAGE_NODE: '<img>'
         },
         EVENT: {
-            SELECTED_CARD: 'selectedCardRequest'
+            SELECTED_CARD: 'selectedCard'
         }
     };
 
@@ -515,15 +515,15 @@ memoryCardGame.GameManager = function (params) {
         }, 1000);
     };
 
-    this.onHandFinishedRequestHandler = function() {
+    this.onHandFinishedHandler = function() {
         stats.updateAttemptsCounter();
     };
 
-    this.onHandInvalidRequestHandler = function() {
+    this.onHandInvalidHandler = function() {
         stats.updateAttemptsCounter();
     };
 
-    this.onCardsAllFlippedRequestHandler = function() {
+    this.onCardsAllFlippedHandler = function() {
         endGame();
     };
 

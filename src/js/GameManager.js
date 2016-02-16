@@ -68,15 +68,15 @@ memoryCardGame.GameManager = function (params) {
         }, 1000);
     };
 
-    this.onHandFinishedRequestHandler = function() {
+    this.onHandFinishedHandler = function() {
         stats.updateAttemptsCounter();
     };
 
-    this.onHandInvalidRequestHandler = function() {
+    this.onHandInvalidHandler = function() {
         stats.updateAttemptsCounter();
     };
 
-    this.onCardsAllFlippedRequestHandler = function() {
+    this.onCardsAllFlippedHandler = function() {
         endGame();
     };
 

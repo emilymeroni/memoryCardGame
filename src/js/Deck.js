@@ -22,9 +22,9 @@ memoryCardGame.Deck = function(params){
         ],
         IMAGE_BASE_URL: 'src\\images',
         EVENT: {
-            HAND_FINISHED: 'handFinishedRequest',
-            HAND_INVALID: 'handInvalidRequest',
-            CARDS_ALL_FLIPPED: 'cardsAllFlippedRequest'
+            HAND_FINISHED: 'handFinished',
+            HAND_INVALID: 'handInvalid',
+            CARDS_ALL_FLIPPED: 'cardsAllFlipped'
         }
     };
 
@@ -120,7 +120,7 @@ memoryCardGame.Deck = function(params){
         }, CONST.TIME_FOR_FLIP);
     };
 
-    this.onSelectedCardRequestHandler = function(data) {
+    this.onSelectedCardHandler = function(data) {
         flippedCards.push(data.card);
         if (isNewHandStarted()) {
             return;

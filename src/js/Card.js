@@ -17,7 +17,7 @@ memoryCardGame.Card = function (params) {
             IMAGE_NODE: '<img>'
         },
         EVENT: {
-            SELECTED_CARD: 'selectedCardRequest'
+            SELECTED_CARD: 'selectedCard'
         }
     };
 
