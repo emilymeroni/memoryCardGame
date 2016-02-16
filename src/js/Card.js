@@ -1,9 +1,9 @@
-/* global $, memoryCardGame */
+/* global $, memoryCardGame, luga */
 
 memoryCardGame.Card = function (params) {
     'use strict';
 
-    memoryCardGame.extend(memoryCardGame.Notifier, this);
+    luga.extend(luga.Notifier, this);
 
     var CONST = {
         CSS: {
