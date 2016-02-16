@@ -217,15 +217,15 @@ memoryCardGame.Deck = function(params){
     };
 
     var isNewHandStarted = function () {
-        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
+        return getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
     };
 
     var isHandFinished = function () {
-        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
+        return getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
     };
 
     var isAllCardsFlipped = function () {
-        return self.getFlippedCardsNumber() === self.getCardsNumber();
+        return getFlippedCardsNumber() === getCardsNumber();
     };
 
     var setDiscoveredCards = function () {
@@ -234,31 +234,30 @@ memoryCardGame.Deck = function(params){
         }
     };
 
-    this.getFlippedCardsNumber = function () {
+    var getFlippedCardsNumber = function () {
         return flippedCards.length;
     };
 
-    this.getCardsNumber = function() {
+    var getCardsNumber = function() {
         return cards.length;
     };
-
-    //TODO: Create onSuccess and onFailure to notify game manager and remove public methods
 
     var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
             for (var i = 0; i < CONST.CARD_COPIES; i++) {
-                flippedCards[self.getFlippedCardsNumber() - 1].getCardNodeAndFlip();
+                flippedCards[getFlippedCardsNumber() - 1].getCardNodeAndFlip();
                 flippedCards.pop();
             }
         }, CONST.TIME_FOR_FLIP);
     };
 
     this.onSelectedCardHandler = function(data) {
-        flippedCards.push(data.card);
+        var card = data.card;
+        flippedCards.push(card);
         if (isNewHandStarted()) {
             return;
         }
-        if (getPreviousFlippedCard().getImage() === data.card.getImage()) {
+        if (getPreviousFlippedCard().getImage() === card.getImage()) {
             if (isHandFinished()) {
                 setDiscoveredCards();
                 self.notifyObservers(CONST.EVENT.HAND_FINISHED, {});
@@ -454,8 +453,13 @@ memoryCardGame.GameManager = function (params) {
     var CONST = {
         CSS: {
             ROOT: 'memory-card-game',
-            BOARD_CLASS: 'memory-board'
-        }
+            BOARD_CLASS: 'memory-board',
+            TIMER_CLASS: 'timer'
+        },
+        SELECTOR: {
+          TIMER_SELECTOR: '.timer'
+        },
+        TIMER: 1000
     };
 
     var config = {
@@ -473,6 +477,8 @@ memoryCardGame.GameManager = function (params) {
 
     var timer = 0;
 
+    var timerInterval;
+
     var persistentData = {
         bestScoreCounter: null
     };
@@ -486,6 +492,7 @@ memoryCardGame.GameManager = function (params) {
         if (memoryLocalStorage !== null) {
             persistentData = memoryLocalStorage;
         }
+
         stats = new memoryCardGame.Stats({
             bestScoreCounter: persistentData.bestScoreCounter
         });
@@ -499,20 +506,21 @@ memoryCardGame.GameManager = function (params) {
         deck.addObserver(self);
         self.container.append(deck.container);
 
+        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS));
+
         $('body').append(self.container);
         startTimer();
     };
 
-    //TODO: Cleanup timer
     var endGame = function () {
         stats.saveStats();
+        clearInterval(timerInterval);
     };
 
-    //TODO: Change interval milliseconds to constant
     var startTimer = function () {
-        setInterval(function () {
-            timer++;
-        }, 1000);
+        timerInterval = setInterval(function () {
+            $(CONST.SELECTOR.TIMER_SELECTOR).text(timer++);
+        }, CONST.TIMER);
     };
 
     this.onHandFinishedHandler = function() {

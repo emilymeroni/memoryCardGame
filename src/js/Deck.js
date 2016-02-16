@@ -84,11 +84,11 @@ memoryCardGame.Deck = function(params){
     };
 
     var isNewHandStarted = function () {
-        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
+        return getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
     };
 
     var isHandFinished = function () {
-        return self.getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
+        return getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
     };
 
     var isAllCardsFlipped = function () {
@@ -112,7 +112,7 @@ memoryCardGame.Deck = function(params){
     var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
             for (var i = 0; i < CONST.CARD_COPIES; i++) {
-                flippedCards[self.getFlippedCardsNumber() - 1].getCardNodeAndFlip();
+                flippedCards[getFlippedCardsNumber() - 1].getCardNodeAndFlip();
                 flippedCards.pop();
             }
         }, CONST.TIME_FOR_FLIP);
