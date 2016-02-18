@@ -1,0 +1,33 @@
+{
+  "bitwise": true,
+  "camelcase": true,
+  "eqeqeq": true,
+  "freeze": true,
+  "indent": 4,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": "vars",
+  "strict": true,
+  "browser": true,
+  "jquery": true,
+  "globals": [
+    "_",
+    "$",
+    "memoryCardGame",
+    "describe",
+    "console",
+    "expect",
+    "it",
+    "spyOn",
+    "beforeEach",
+    "afterEach",
+    "jasmine",
+    "loadFixtures",
+    "readFixtures",
+    "getJSONFixture"
+  ]
+
+}
