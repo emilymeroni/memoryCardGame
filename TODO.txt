@@ -4,15 +4,13 @@
 - Improve Jasmine tests
 - Add jsDocs
 - Create documentation
-- Import JsHint configuration into project
 - Integrate SCSS-lint
 - Create a GUI for the user to configure properties of the game
 - Allow to pass over another class to the main wrapper for skinning
 - Allow the user to select a skin for the game
 - Allow the user to select his card theme
 - Validate user input (minimum card number, too many cards)
-- Insert a timer
 - Configurable number of cards to display on the grid
 - Pick the number of copies
 - Solo or two player game
-- Allow multiple instances of GameManager
+- Github pages
