@@ -1,6 +1,4 @@
-/* global $, memoryCardGame */
-
-memoryCardGame.Stats = function(params){
+memoryCardGame.Stats = function (params) {
 
     'use strict';
 
@@ -65,12 +63,12 @@ memoryCardGame.Stats = function(params){
         }
     };
 
-    this.updateAttemptsCounter = function() {
+    this.updateAttemptsCounter = function () {
         config.attempts++;
         $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
     };
 
-    this.saveStats = function() {
+    this.saveStats = function () {
         if ((config.bestScoreCounter === null || config.attempts < config.bestScoreCounter)) {
             memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: config.attempts});
         }

@@ -1,6 +1,4 @@
-/* global $, memoryCardGame, luga */
-
-memoryCardGame.Deck = function(params){
+memoryCardGame.Deck = function (params) {
 
     'use strict';
 
@@ -25,6 +23,9 @@ memoryCardGame.Deck = function(params){
             HAND_FINISHED: 'handFinished',
             HAND_INVALID: 'handInvalid',
             CARDS_ALL_FLIPPED: 'cardsAllFlipped'
+        },
+        HTML: {
+            DECK: '<ul></ul>'
         }
     };
 
@@ -42,7 +43,7 @@ memoryCardGame.Deck = function(params){
 
     var imageMap = [];
 
-    this.container = $('<ul></ul>').addClass(CONST.CSS.ROOT);
+    this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
     var self = this;
 
@@ -53,7 +54,7 @@ memoryCardGame.Deck = function(params){
         drawCards();
     };
 
-    var createCards = function() {
+    var createCards = function () {
         for (var i = 0; i < imageMap.length; i++) {
             for (var j = 0; j < CONST.CARD_COPIES; j++) {
                 var card = new memoryCardGame.Card({
@@ -74,25 +75,24 @@ memoryCardGame.Deck = function(params){
 
     var drawCards = function () {
         for (var i = 0; i < cards.length; i++) {
-            var cardNode = cards[i].getNode();
-            self.container.append(cardNode);
+            self.container.append(cards[i].container);
         }
     };
 
-    var getPreviousFlippedCard = function()  {
+    var getPreviousFlippedCard = function () {
         return flippedCards[flippedCards.length - 2];
     };
 
     var isNewHandStarted = function () {
-        return getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
+        return flippedCards.length % CONST.CARD_COPIES === 1;
     };
 
     var isHandFinished = function () {
-        return getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
+        return flippedCards.length % CONST.CARD_COPIES === 0;
     };
 
     var isAllCardsFlipped = function () {
-        return getFlippedCardsNumber() === getCardsNumber();
+        return flippedCards.length === cards.length;
     };
 
     var setDiscoveredCards = function () {
@@ -101,24 +101,16 @@ memoryCardGame.Deck = function(params){
         }
     };
 
-    var getFlippedCardsNumber = function () {
-        return flippedCards.length;
-    };
-
-    var getCardsNumber = function() {
-        return cards.length;
-    };
-
     var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
             for (var i = 0; i < CONST.CARD_COPIES; i++) {
-                flippedCards[getFlippedCardsNumber() - 1].getCardNodeAndFlip();
+                flippedCards[flippedCards.length - 1].getCardNodeAndFlip();
                 flippedCards.pop();
             }
         }, CONST.TIME_FOR_FLIP);
     };
 
-    this.onSelectedCardHandler = function(data) {
+    this.onSelectedCardHandler = function (data) {
         var card = data.card;
         flippedCards.push(card);
         if (isNewHandStarted()) {

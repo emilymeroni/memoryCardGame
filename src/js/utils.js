@@ -15,7 +15,7 @@ window.memoryCardGame.utils = {};
         memoryCardGame.utils.persistInLocalStorage(mergedData);
     };
 
-        memoryCardGame.utils.retrieveFromLocalStorage = function () {
+    memoryCardGame.utils.retrieveFromLocalStorage = function () {
         return JSON.parse(localStorage.getItem('memoryCardGame'));
     };
 })();

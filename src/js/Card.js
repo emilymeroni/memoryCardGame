@@ -7,7 +7,7 @@ memoryCardGame.Card = function (params) {
 
     var CONST = {
         CSS: {
-            SINGLE_CARD_CLASS: 'memory-card'
+            ROOT: 'memory-card'
         },
         DATA: {
             CARD_ID: 'data-card-id'
@@ -34,7 +34,27 @@ memoryCardGame.Card = function (params) {
 
     var imageNode = $(CONST.HTML.IMAGE_NODE);
 
+    this.container = $(CONST.HTML.CARD_NODE).addClass(CONST.CSS.ROOT);
+
     var self = this;
+
+    var init = function () {
+        self.container.attr(CONST.DATA.CARD_ID, config.id);
+        attachEvents();
+    };
+
+    var attachEvents = function () {
+        self.container.click(function () {
+            if (config.flipped === false) {
+                flip(self.container);
+                if (discovered === false) {
+                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
+                        card: self
+                    });
+                }
+            }
+        });
+    };
 
     var flip = function (cardNode) {
         config.flipped = !config.flipped;
@@ -47,8 +67,13 @@ memoryCardGame.Card = function (params) {
         }
     };
 
+    var getImageNode = function () {
+        imageNode.attr('src', config.image);
+        return imageNode;
+    };
+
     this.getCardNodeAndFlip = function () {
-        var cardNode = $('.' + CONST.CSS.SINGLE_CARD_CLASS + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
+        var cardNode = $('.' + CONST.CSS.ROOT + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
         flip(cardNode);
     };
 
@@ -56,29 +81,10 @@ memoryCardGame.Card = function (params) {
         return config.image;
     };
 
-    var getImageNode = function () {
-        imageNode.attr('src', config.image);
-        return imageNode;
-    };
-
-    this.getNode = function () {
-        var cardNode = $(CONST.HTML.CARD_NODE);
-        cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
-        cardNode.click(function () {
-            if (config.flipped === false) {
-                flip(cardNode);
-                if (discovered === false) {
-                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
-                        card: self
-                    });
-                }
-            }
-        });
-        return cardNode;
-    };
-
     this.setDiscovered = function () {
         discovered = true;
     };
+
+    init.call(this);
 };
 

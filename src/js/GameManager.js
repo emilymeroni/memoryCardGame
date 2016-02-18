@@ -1,5 +1,3 @@
-/* global $, memoryCardGame */
-
 memoryCardGame.GameManager = function (params) {
 
     'use strict';
@@ -11,7 +9,10 @@ memoryCardGame.GameManager = function (params) {
             TIMER_CLASS: 'timer'
         },
         SELECTOR: {
-          TIMER_SELECTOR: '.timer'
+            TIMER_SELECTOR: '.timer'
+        },
+        HTML: {
+            GAME: '<div></div>'
         },
         TIMER: 1000
     };
@@ -37,7 +38,7 @@ memoryCardGame.GameManager = function (params) {
         bestScoreCounter: null
     };
 
-    this.container = $('<div></div>').addClass(config.gameClass);
+    this.container = $(CONST.HTML.GAME).addClass(config.gameClass);
 
     var self = this;
 
@@ -77,15 +78,15 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
-    this.onHandFinishedHandler = function() {
+    this.onHandFinishedHandler = function () {
         stats.updateAttemptsCounter();
     };
 
-    this.onHandInvalidHandler = function() {
+    this.onHandInvalidHandler = function () {
         stats.updateAttemptsCounter();
     };
 
-    this.onCardsAllFlippedHandler = function() {
+    this.onCardsAllFlippedHandler = function () {
         endGame();
     };
 
