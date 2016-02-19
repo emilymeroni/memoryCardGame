@@ -29,10 +29,7 @@ memoryCardGame.Deck = function (params) {
         }
     };
 
-    var config = {
-        cardsClass: CONST.CSS.CARDS_CLASS,
-        singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);

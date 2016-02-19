@@ -334,23 +334,18 @@ memoryCardGame.GameManager = function (params) {
 
     var CONST = {
         CSS: {
-            ROOT: 'memory-card-game',
             BOARD_CLASS: 'memory-board',
             TIMER_CLASS: 'timer'
         },
         SELECTOR: {
+            ROOT: '.memory-card-game',
             TIMER_SELECTOR: '.timer'
-        },
-        HTML: {
-            GAME: '<div></div>'
         },
         TIMER: 1000
     };
 
     var config = {
-        cardsClass: CONST.CSS.CARDS_CLASS,
-        gameClass: CONST.CSS.ROOT,
-        singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
+        gameClass: CONST.SELECTOR.ROOT
     };
 
     // Merge incoming params with internal config
@@ -368,7 +363,7 @@ memoryCardGame.GameManager = function (params) {
         bestScoreCounter: null
     };
 
-    this.container = $(CONST.HTML.GAME).addClass(config.gameClass);
+    this.container = $(config.gameClass);
 
     var self = this;
 
@@ -393,7 +388,6 @@ memoryCardGame.GameManager = function (params) {
 
         self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
 
-        $('body').append(self.container);
         startTimer();
     };
 
