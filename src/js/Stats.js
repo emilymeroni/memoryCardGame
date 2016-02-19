@@ -65,7 +65,7 @@ memoryCardGame.Stats = function (params) {
 
     this.updateAttemptsCounter = function () {
         config.attempts++;
-        $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+        self.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
     };
 
     this.saveStats = function () {
