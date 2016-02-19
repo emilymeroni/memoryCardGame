@@ -18,7 +18,6 @@ describe('GameManager', function() {
         };
 
         gameManager = new memoryCardGame.GameManager();
-
     });
 
     xit('is the class that I need to instantiate to play a new memory game', function() {

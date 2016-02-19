@@ -13,14 +13,19 @@ module.exports = function(config) {
 		files: [
 			// Libs
 			"lib/jquery.min.js",
+			"lib/luga.core.min.js",
 
 			// Jasmine libs and configuration
 			"test/lib/jasmine/jasmine-jquery.js",
 
 			// Source files
 			"src/js/core.js",
+			"src/js/utils.js",
+			"src/js/Deck.js",
 			"src/js/Card.js",
+			"src/js/Stats.js",
 			"src/js/GameManager.js",
+			"src/js/UserOptions.js",
 			"src/**/*.js",
 
 			// Test specs

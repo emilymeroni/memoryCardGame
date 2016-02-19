@@ -16,14 +16,12 @@ window.memoryCardGame.utils = {};
         memoryCardGame.utils.persistInLocalStorage(mergedData);
     };
 
-        memoryCardGame.utils.retrieveFromLocalStorage = function () {
+    memoryCardGame.utils.retrieveFromLocalStorage = function () {
         return JSON.parse(localStorage.getItem('memoryCardGame'));
     };
 })();
 
-/* global $, memoryCardGame, luga */
-
-memoryCardGame.Deck = function(params){
+memoryCardGame.Deck = function (params) {
 
     'use strict';
 
@@ -48,6 +46,9 @@ memoryCardGame.Deck = function(params){
             HAND_FINISHED: 'handFinished',
             HAND_INVALID: 'handInvalid',
             CARDS_ALL_FLIPPED: 'cardsAllFlipped'
+        },
+        HTML: {
+            DECK: '<ul></ul>'
         }
     };
 
@@ -65,7 +66,7 @@ memoryCardGame.Deck = function(params){
 
     var imageMap = [];
 
-    this.container = $('<ul></ul>').addClass(CONST.CSS.ROOT);
+    this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
     var self = this;
 
@@ -76,7 +77,7 @@ memoryCardGame.Deck = function(params){
         drawCards();
     };
 
-    var createCards = function() {
+    var createCards = function () {
         for (var i = 0; i < imageMap.length; i++) {
             for (var j = 0; j < CONST.CARD_COPIES; j++) {
                 var card = new memoryCardGame.Card({
@@ -97,25 +98,24 @@ memoryCardGame.Deck = function(params){
 
     var drawCards = function () {
         for (var i = 0; i < cards.length; i++) {
-            var cardNode = cards[i].getNode();
-            self.container.append(cardNode);
+            self.container.append(cards[i].container);
         }
     };
 
-    var getPreviousFlippedCard = function()  {
+    var getPreviousFlippedCard = function () {
         return flippedCards[flippedCards.length - 2];
     };
 
     var isNewHandStarted = function () {
-        return getFlippedCardsNumber() % CONST.CARD_COPIES === 1;
+        return flippedCards.length % CONST.CARD_COPIES === 1;
     };
 
     var isHandFinished = function () {
-        return getFlippedCardsNumber() % CONST.CARD_COPIES === 0;
+        return flippedCards.length % CONST.CARD_COPIES === 0;
     };
 
     var isAllCardsFlipped = function () {
-        return getFlippedCardsNumber() === getCardsNumber();
+        return flippedCards.length === cards.length;
     };
 
     var setDiscoveredCards = function () {
@@ -124,24 +124,16 @@ memoryCardGame.Deck = function(params){
         }
     };
 
-    var getFlippedCardsNumber = function () {
-        return flippedCards.length;
-    };
-
-    var getCardsNumber = function() {
-        return cards.length;
-    };
-
     var coverLatestHandFlippedCards = function () {
         setTimeout(function () {
             for (var i = 0; i < CONST.CARD_COPIES; i++) {
-                flippedCards[getFlippedCardsNumber() - 1].getCardNodeAndFlip();
+                flippedCards[flippedCards.length - 1].getCardNodeAndFlip();
                 flippedCards.pop();
             }
         }, CONST.TIME_FOR_FLIP);
     };
 
-    this.onSelectedCardHandler = function(data) {
+    this.onSelectedCardHandler = function (data) {
         var card = data.card;
         flippedCards.push(card);
         if (isNewHandStarted()) {
@@ -167,8 +159,6 @@ memoryCardGame.Deck = function(params){
 };
 
 
-/* global $, memoryCardGame, luga */
-
 memoryCardGame.Card = function (params) {
     'use strict';
 
@@ -176,7 +166,7 @@ memoryCardGame.Card = function (params) {
 
     var CONST = {
         CSS: {
-            SINGLE_CARD_CLASS: 'memory-card'
+            ROOT: 'memory-card'
         },
         DATA: {
             CARD_ID: 'data-card-id'
@@ -203,7 +193,27 @@ memoryCardGame.Card = function (params) {
 
     var imageNode = $(CONST.HTML.IMAGE_NODE);
 
+    this.container = $(CONST.HTML.CARD_NODE).addClass(CONST.CSS.ROOT);
+
     var self = this;
+
+    var init = function () {
+        self.container.attr(CONST.DATA.CARD_ID, config.id);
+        attachEvents();
+    };
+
+    var attachEvents = function () {
+        self.container.click(function () {
+            if (config.flipped === false) {
+                flip(self.container);
+                if (discovered === false) {
+                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
+                        card: self
+                    });
+                }
+            }
+        });
+    };
 
     var flip = function (cardNode) {
         config.flipped = !config.flipped;
@@ -216,8 +226,13 @@ memoryCardGame.Card = function (params) {
         }
     };
 
+    var getImageNode = function () {
+        imageNode.attr('src', config.image);
+        return imageNode;
+    };
+
     this.getCardNodeAndFlip = function () {
-        var cardNode = $('.' + CONST.CSS.SINGLE_CARD_CLASS + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
+        var cardNode = $('.' + CONST.CSS.ROOT + '[' + CONST.DATA.CARD_ID + '=' + config.id + ']');
         flip(cardNode);
     };
 
@@ -225,36 +240,15 @@ memoryCardGame.Card = function (params) {
         return config.image;
     };
 
-    var getImageNode = function () {
-        imageNode.attr('src', config.image);
-        return imageNode;
-    };
-
-    this.getNode = function () {
-        var cardNode = $(CONST.HTML.CARD_NODE);
-        cardNode.addClass(CONST.CSS.SINGLE_CARD_CLASS).attr(CONST.DATA.CARD_ID, config.id);
-        cardNode.click(function () {
-            if (config.flipped === false) {
-                flip(cardNode);
-                if (discovered === false) {
-                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
-                        card: self
-                    });
-                }
-            }
-        });
-        return cardNode;
-    };
-
     this.setDiscovered = function () {
         discovered = true;
     };
+
+    init.call(this);
 };
 
 
-/* global $, memoryCardGame */
-
-memoryCardGame.Stats = function(params){
+memoryCardGame.Stats = function (params) {
 
     'use strict';
 
@@ -319,12 +313,12 @@ memoryCardGame.Stats = function(params){
         }
     };
 
-    this.updateAttemptsCounter = function() {
+    this.updateAttemptsCounter = function () {
         config.attempts++;
-        $(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+        self.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
     };
 
-    this.saveStats = function() {
+    this.saveStats = function () {
         if ((config.bestScoreCounter === null || config.attempts < config.bestScoreCounter)) {
             memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: config.attempts});
         }
@@ -333,8 +327,6 @@ memoryCardGame.Stats = function(params){
     init.call(this);
 };
 
-
-/* global $, memoryCardGame */
 
 memoryCardGame.GameManager = function (params) {
 
@@ -347,7 +339,10 @@ memoryCardGame.GameManager = function (params) {
             TIMER_CLASS: 'timer'
         },
         SELECTOR: {
-          TIMER_SELECTOR: '.timer'
+            TIMER_SELECTOR: '.timer'
+        },
+        HTML: {
+            GAME: '<div></div>'
         },
         TIMER: 1000
     };
@@ -373,7 +368,7 @@ memoryCardGame.GameManager = function (params) {
         bestScoreCounter: null
     };
 
-    this.container = $('<div></div>').addClass(config.gameClass);
+    this.container = $(CONST.HTML.GAME).addClass(config.gameClass);
 
     var self = this;
 
@@ -413,86 +408,84 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
-    this.onHandFinishedHandler = function() {
+    this.onHandFinishedHandler = function () {
         stats.updateAttemptsCounter();
     };
 
-    this.onHandInvalidHandler = function() {
+    this.onHandInvalidHandler = function () {
         stats.updateAttemptsCounter();
     };
 
-    this.onCardsAllFlippedHandler = function() {
+    this.onCardsAllFlippedHandler = function () {
         endGame();
     };
 
     init.call(this);
 };
-/* global $, memoryCardGame */
+memoryCardGame.UserOptions = function (params) {
 
-memoryCardGame.UserOptions = function(params){
+    'use strict';
 
-	'use strict';
+    var CONST = {
+        CSS: {
+            USER_OPTIONS_WRAPPER: 'user-options-wrapper',
+            OPTION_PANEL_CLASS: 'user-options-panel'
+        },
+        TEXT: {
+            PICTURE_NUMBER: 'Number of pictures:',
+            USER_OPTION_PANEL: 'User option panel',
+            CLOSE: 'Close'
+        }
+    };
 
-	var CONST = {
-		CSS: {
-			USER_OPTIONS_WRAPPER: 'user-options-wrapper',
-			OPTION_PANEL_CLASS: 'user-options-panel'
-		},
-		TEXT: {
-			PICTURE_NUMBER: 'Number of pictures:',
-			USER_OPTION_PANEL: 'User option panel',
-			CLOSE: 'Close'
-		}
-	};
+    var config = {
+        cardCopies: null
+    };
 
-	var config = {
-		cardCopies: null
-	};
+    // Merge incoming params with internal config
+    $.extend(config, params);
 
-	// Merge incoming params with internal config
-	$.extend(config, params);
+    var self = this;
 
-	var self = this;
+    self.container = $('<div></div>').addClass(CONST.CSS.USER_OPTIONS_WRAPPER);
 
-	self.container = $('<div></div>').addClass(CONST.CSS.USER_OPTIONS_WRAPPER);
+    var init = function () {
+        draw();
+    };
 
-	var init = function () {
-		draw();
-	};
+    var draw = function () {
+        //TODO: Create utils library for dom elements
+        var userOptionsPanel = $('<div></div>').addClass(CONST.CSS.OPTION_PANEL_CLASS);
+        drawHeader(userOptionsPanel);
+        drawOptionsForm(userOptionsPanel);
+        drawFooter(userOptionsPanel);
+        self.container.append(userOptionsPanel);
+        //TODO: Create a global class for memoryGame and append panel to it
+        $('body').append(self.container);
+    };
 
-	var draw = function() {
-		//TODO: Create utils library for dom elements
-		var userOptionsPanel = $('<div></div>').addClass(CONST.CSS.OPTION_PANEL_CLASS);
-		drawHeader(userOptionsPanel);
-		drawOptionsForm(userOptionsPanel);
-		drawFooter(userOptionsPanel);
-		self.container.append(userOptionsPanel);
-		//TODO: Create a global class for memoryGame and append panel to it
-		$('body').append(self.container);
-	};
+    var drawHeader = function (rootNode) {
+        var userOptionsTitle = $('<h2></h2>').text(CONST.TEXT.USER_OPTION_PANEL);
+        rootNode.append(userOptionsTitle);
+    };
 
-	var drawHeader = function(rootNode) {
-		var userOptionsTitle = $('<h2></h2>').text(CONST.TEXT.USER_OPTION_PANEL);
-		rootNode.append(userOptionsTitle);
-	};
+    var drawOptionsForm = function (rootNode) {
+        var howManyPicturesLabel = $('<label></label>').text(CONST.TEXT.PICTURE_NUMBER);
+        var howManyPictures = $('<input type="text">');
+        howManyPicturesLabel.append(howManyPictures);
+        rootNode.append(howManyPicturesLabel);
+    };
 
-	var drawOptionsForm = function(rootNode) {
-		var howManyPicturesLabel = $('<label></label>').text(CONST.TEXT.PICTURE_NUMBER);
-		var howManyPictures = $('<input type="text">');
-		howManyPicturesLabel.append(howManyPictures);
-		rootNode.append(howManyPicturesLabel);
-	};
+    var drawFooter = function (rootNode) {
+        var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
+        closeButton.click(function () {
+            self.container.hide();
+            new memoryCardGame.GameManager();
+        });
+        rootNode.append(closeButton);
+    };
 
-	var drawFooter = function(rootNode) {
-		var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
-		closeButton.click(function(){
-			self.container.hide();
-			new memoryCardGame.GameManager();
-		});
-		rootNode.append(closeButton);
-	};
-
-	init.call(this);
+    init.call(this);
 
 };
 
