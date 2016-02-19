@@ -1,5 +1,3 @@
-/* global $, memoryCardGame, luga */
-
 memoryCardGame.Card = function (params) {
     'use strict';
 
