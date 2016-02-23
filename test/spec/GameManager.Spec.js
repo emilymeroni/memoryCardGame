@@ -18,7 +18,7 @@ describe('GameManager', function() {
         };
 
         gameManager = new memoryCardGame.GameManager({
-            gameClass: '.dummy'
+            gameContainer: '.dummy'
         });
     });
 
@@ -28,11 +28,11 @@ describe('GameManager', function() {
 
     describe('it\'s container property:', function() {
 
-        xit('is a jQuery object holding the HTML node that contains all the elements for you to play', function() {
+        it('is a jQuery object holding the HTML node that contains all the elements for you to play', function() {
             expect(gameManager.container).toExist();
         });
 
-       xit('is associated to the "memory-board" CSS class', function() {
+       it('is associated to the "memory-board" CSS class', function() {
             expect(gameManager.container).toHaveClass(CONST.CSS.ROOT);
         });
     });

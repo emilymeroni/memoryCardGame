@@ -52,10 +52,7 @@ memoryCardGame.Deck = function (params) {
         }
     };
 
-    var config = {
-        cardsClass: CONST.CSS.CARDS_CLASS,
-        singleCardClass: CONST.CSS.SINGLE_CARD_CLASS
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -283,6 +280,16 @@ memoryCardGame.Stats = function (params) {
     /**
      * @type {jQuery}
      */
+    var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER);
+
+    /**
+     * @type {jQuery}
+     */
+    var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER);
+
+    /**
+     * @type {jQuery}
+     */
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var self = this;
@@ -295,7 +302,7 @@ memoryCardGame.Stats = function (params) {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-        var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER).text(config.attempts);
+       attemptsNumber.text(config.attempts);
 
         currentMoves.append(attemptsText);
         currentMoves.append(attemptsNumber);
@@ -305,7 +312,7 @@ memoryCardGame.Stats = function (params) {
         if (config.bestScoreCounter !== null) {
             var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
             var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER).text(config.bestScoreCounter);
+            bestScoreNumber.text(config.bestScoreCounter);
 
             bestScore.append(bestScoreText);
             bestScore.append(bestScoreNumber);
@@ -315,7 +322,7 @@ memoryCardGame.Stats = function (params) {
 
     this.updateAttemptsCounter = function () {
         config.attempts++;
-        self.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+        attemptsNumber.text(config.attempts);
     };
 
     this.saveStats = function () {
@@ -334,18 +341,19 @@ memoryCardGame.GameManager = function (params) {
 
     var CONST = {
         CSS: {
+            ROOT: 'memory-card-game',
             BOARD_CLASS: 'memory-board',
             TIMER_CLASS: 'timer'
         },
         SELECTOR: {
-            ROOT: '.memory-card-game',
+            CONTAINER: 'body',
             TIMER_SELECTOR: '.timer'
         },
         TIMER: 1000
     };
 
     var config = {
-        gameClass: CONST.SELECTOR.ROOT
+        gameContainer: CONST.SELECTOR.CONTAINER
     };
 
     // Merge incoming params with internal config
@@ -363,7 +371,7 @@ memoryCardGame.GameManager = function (params) {
         bestScoreCounter: null
     };
 
-    this.container = $(config.gameClass);
+    this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
@@ -382,13 +390,12 @@ memoryCardGame.GameManager = function (params) {
             cardsClass: config.cardsClass,
             singleCardClass: config.singleCardClass
         });
-
         deck.addObserver(self);
         self.container.append(deck.container);
 
-        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
-
         startTimer();
+
+        $(config.gameContainer).append(self.container);
     };
 
     var endGame = function () {
@@ -397,6 +404,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var startTimer = function () {
+        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
         timerInterval = setInterval(function () {
             $(CONST.SELECTOR.TIMER_SELECTOR).text(++timer);
         }, CONST.TIMER);
