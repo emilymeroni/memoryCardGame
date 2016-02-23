@@ -15,7 +15,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var config = {
-        gameClass: CONST.SELECTOR.ROOT
+        gameContainer: CONST.SELECTOR.ROOT
     };
 
     // Merge incoming params with internal config
@@ -33,7 +33,7 @@ memoryCardGame.GameManager = function (params) {
         bestScoreCounter: null
     };
 
-    this.container = $(config.gameClass);
+    this.container = $(config.gameContainer);
 
     var self = this;
 
