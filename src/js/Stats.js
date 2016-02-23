@@ -30,6 +30,10 @@ memoryCardGame.Stats = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER);
+
+    var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER);
+
     /**
      * @type {jQuery}
      */
@@ -45,7 +49,7 @@ memoryCardGame.Stats = function (params) {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-        var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER).text(config.attempts);
+       attemptsNumber.text(config.attempts);
 
         currentMoves.append(attemptsText);
         currentMoves.append(attemptsNumber);
@@ -55,7 +59,7 @@ memoryCardGame.Stats = function (params) {
         if (config.bestScoreCounter !== null) {
             var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
             var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER).text(config.bestScoreCounter);
+            bestScoreNumber.text(config.bestScoreCounter);
 
             bestScore.append(bestScoreText);
             bestScore.append(bestScoreNumber);
@@ -65,7 +69,7 @@ memoryCardGame.Stats = function (params) {
 
     this.updateAttemptsCounter = function () {
         config.attempts++;
-        self.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(config.attempts);
+        attemptsNumber.text(config.attempts);
     };
 
     this.saveStats = function () {
