@@ -30,8 +30,14 @@ memoryCardGame.Stats = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {jQuery}
+     */
     var attemptsNumber = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_NUMBER);
 
+    /**
+     * @type {jQuery}
+     */
     var bestScoreNumber = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_NUMBER);
 
     /**
