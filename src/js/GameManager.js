@@ -52,11 +52,8 @@ memoryCardGame.GameManager = function (params) {
             cardsClass: config.cardsClass,
             singleCardClass: config.singleCardClass
         });
-
         deck.addObserver(self);
         self.container.append(deck.container);
-
-        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
 
         startTimer();
     };
@@ -67,6 +64,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var startTimer = function () {
+        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
         timerInterval = setInterval(function () {
             $(CONST.SELECTOR.TIMER_SELECTOR).text(++timer);
         }, CONST.TIMER);
