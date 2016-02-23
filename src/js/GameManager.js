@@ -67,9 +67,10 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var startTimer = function () {
-        self.container.append($('<div></div>').addClass(CONST.CSS.TIMER_CLASS).text(timer));
+        var timerContainer = $('<div></div>').addClass(CONST.CSS.TIMER_CLASS);
+        self.container.append(timerContainer.text(timer));
         timerInterval = setInterval(function () {
-            $(CONST.SELECTOR.TIMER_SELECTOR).text(++timer);
+            timerContainer.text(++timer);
         }, CONST.TIMER);
     };
 

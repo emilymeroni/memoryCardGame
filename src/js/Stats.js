@@ -55,7 +55,7 @@ memoryCardGame.Stats = function (params) {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-       attemptsNumber.text(config.attempts);
+        attemptsNumber.text(config.attempts);
 
         currentMoves.append(attemptsText);
         currentMoves.append(attemptsNumber);
