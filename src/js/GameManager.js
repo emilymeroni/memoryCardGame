@@ -30,23 +30,13 @@ memoryCardGame.GameManager = function (params) {
 
     var timerInterval;
 
-    var persistentData = {
-        bestScoreCounter: null
-    };
-
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
     var init = function () {
-        var memoryLocalStorage = memoryCardGame.utils.retrieveFromLocalStorage();
-        if (memoryLocalStorage !== null) {
-            persistentData = memoryLocalStorage;
-        }
 
-        stats = new memoryCardGame.Stats({
-            bestScoreCounter: persistentData.bestScoreCounter
-        });
+        stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
         deck = new memoryCardGame.Deck({

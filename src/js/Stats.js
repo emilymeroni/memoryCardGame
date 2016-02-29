@@ -21,14 +21,12 @@ memoryCardGame.Stats = function (params) {
         }
     };
 
-    var config = {
-        bestScoreCounter: null,
-        attempts: 0
-
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);
+
+    var attempts = 0;
 
     /**
      * @type {jQuery}
@@ -55,17 +53,19 @@ memoryCardGame.Stats = function (params) {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-        attemptsNumber.text(config.attempts);
+        attemptsNumber.text(attempts);
 
         currentMoves.append(attemptsText);
         currentMoves.append(attemptsNumber);
 
         self.container.append(currentMoves);
 
-        if (config.bestScoreCounter !== null) {
+        var bestScoreCounter = memoryCardGame.utils.getFromLocalStorage('bestScoreCounter');
+
+        if (bestScoreCounter) {
             var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
             var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            bestScoreNumber.text(config.bestScoreCounter);
+            bestScoreNumber.text(bestScoreCounter);
 
             bestScore.append(bestScoreText);
             bestScore.append(bestScoreNumber);
@@ -74,13 +74,14 @@ memoryCardGame.Stats = function (params) {
     };
 
     this.updateAttemptsCounter = function () {
-        config.attempts++;
-        attemptsNumber.text(config.attempts);
+        attempts++;
+        attemptsNumber.text(attempts);
     };
 
     this.saveStats = function () {
-        if ((config.bestScoreCounter === null || config.attempts < config.bestScoreCounter)) {
-            memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: config.attempts});
+        var bestScoreCounter = memoryCardGame.utils.getFromLocalStorage('bestScoreCounter');
+        if ((bestScoreCounter === undefined || attempts < bestScoreCounter)) {
+            memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: attempts});
         }
     };
 
