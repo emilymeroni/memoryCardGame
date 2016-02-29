@@ -61,16 +61,20 @@ describe('GameManager', function () {
     describe('.onHandFinishedHandler():', function () {
 
         it('increases the attempts counter by one', function () {
+            var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
+            expect(parseInt(attemptsNumber.text(), 10)).toEqual(0);
             gameManager.onHandFinishedHandler();
-            expect(parseInt(gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(), 10)).toEqual(1);
+            expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
         });
     });
 
     describe('.onHandInvalidHandler():', function () {
 
         it('increases the attempts counter by one', function () {
-            gameManager.onHandFinishedHandler();
-            expect(parseInt(gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER).text(), 10)).toEqual(1);
+            var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
+            expect(parseInt(attemptsNumber.text(), 10)).toEqual(0);
+            gameManager.onHandInvalidHandler();
+            expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
         });
     });
 

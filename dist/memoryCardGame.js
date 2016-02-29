@@ -19,6 +19,13 @@ window.memoryCardGame.utils = {};
     memoryCardGame.utils.retrieveFromLocalStorage = function () {
         return JSON.parse(localStorage.getItem('memoryCardGame'));
     };
+
+    memoryCardGame.utils.getFromLocalStorage = function (key) {
+        var persistedData = memoryCardGame.utils.retrieveFromLocalStorage();
+        if(persistedData !== null) {
+            return persistedData[key];
+        }
+    };
 })();
 
 memoryCardGame.Deck = function (params) {
@@ -268,14 +275,12 @@ memoryCardGame.Stats = function (params) {
         }
     };
 
-    var config = {
-        bestScoreCounter: null,
-        attempts: 0
-
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);
+
+    var attempts = 0;
 
     /**
      * @type {jQuery}
@@ -302,17 +307,19 @@ memoryCardGame.Stats = function (params) {
 
         var currentMoves = $('<div></div>').addClass(CONST.CSS.ATTEMPTS);
         var attemptsText = $('<span></span>').addClass(CONST.CSS.ATTEMPTS_TEXT).text(CONST.TEXT.ATTEMPTS);
-       attemptsNumber.text(config.attempts);
+        attemptsNumber.text(attempts);
 
         currentMoves.append(attemptsText);
         currentMoves.append(attemptsNumber);
 
         self.container.append(currentMoves);
 
-        if (config.bestScoreCounter !== null) {
+        var bestScoreCounter = memoryCardGame.utils.getFromLocalStorage('bestScoreCounter');
+
+        if (bestScoreCounter) {
             var bestScore = $('<div></div>').addClass(CONST.CSS.BEST_SCORE);
             var bestScoreText = $('<span></span>').addClass(CONST.CSS.BEST_SCORE_TEXT).text(CONST.TEXT.BEST_SCORE);
-            bestScoreNumber.text(config.bestScoreCounter);
+            bestScoreNumber.text(bestScoreCounter);
 
             bestScore.append(bestScoreText);
             bestScore.append(bestScoreNumber);
@@ -321,13 +328,14 @@ memoryCardGame.Stats = function (params) {
     };
 
     this.updateAttemptsCounter = function () {
-        config.attempts++;
-        attemptsNumber.text(config.attempts);
+        attempts++;
+        attemptsNumber.text(attempts);
     };
 
     this.saveStats = function () {
-        if ((config.bestScoreCounter === null || config.attempts < config.bestScoreCounter)) {
-            memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: config.attempts});
+        var bestScoreCounter = memoryCardGame.utils.getFromLocalStorage('bestScoreCounter');
+        if ((bestScoreCounter === undefined || attempts < bestScoreCounter)) {
+            memoryCardGame.utils.addDataInLocalStorage({bestScoreCounter: attempts});
         }
     };
 
@@ -367,23 +375,13 @@ memoryCardGame.GameManager = function (params) {
 
     var timerInterval;
 
-    var persistentData = {
-        bestScoreCounter: null
-    };
-
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
     var init = function () {
-        var memoryLocalStorage = memoryCardGame.utils.retrieveFromLocalStorage();
-        if (memoryLocalStorage !== null) {
-            persistentData = memoryLocalStorage;
-        }
 
-        stats = new memoryCardGame.Stats({
-            bestScoreCounter: persistentData.bestScoreCounter
-        });
+        stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
         deck = new memoryCardGame.Deck({
