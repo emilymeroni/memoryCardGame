@@ -58,11 +58,21 @@ describe('GameManager', function () {
         });
     });
 
+    xdescribe('the game timer:', function () {
+
+        it('is the time in seconds that is passing by during the game that is being played', function () {
+            jasmine.clock().install();
+            var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
+            jasmine.clock().tick(1001);
+            expect(parseInt(timerContainer.text())).toEqual(1);
+            jasmine.clock().uninstall();
+        });
+    });
+
     describe('.onHandFinishedHandler():', function () {
 
         it('increases the attempts counter by one', function () {
             var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
-            expect(parseInt(attemptsNumber.text(), 10)).toEqual(0);
             gameManager.onHandFinishedHandler();
             expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
         });
@@ -72,13 +82,28 @@ describe('GameManager', function () {
 
         it('increases the attempts counter by one', function () {
             var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
-            expect(parseInt(attemptsNumber.text(), 10)).toEqual(0);
             gameManager.onHandInvalidHandler();
             expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
         });
     });
 
-    xdescribe('.onCardsAllFlippedHandler():', function () {
+    describe('.onCardsAllFlippedHandler():', function () {
+
+        xit('calls the .saveStats() method of the Stats class', function () {
+            var stats = new memoryCardGame.Stats();
+            spyOn(stats, 'saveStats');
+            gameManager.onCardsAllFlippedHandler();
+            expect(stats.saveStats()).toHaveBeenCalled();
+        });
+
+        it('clears the timer', function () {
+            var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
+            jasmine.clock().install();
+            jasmine.clock().tick(1000);
+            gameManager.onCardsAllFlippedHandler();
+            expect(parseInt(timerContainer.text())).toEqual(0);
+            jasmine.clock().uninstall();
+        });
     });
 
 });
