@@ -58,9 +58,9 @@ describe('GameManager', function () {
         });
     });
 
-    xdescribe('the game timer:', function () {
+    describe('the game timer:', function () {
 
-        it('is the time in seconds that is passing by during the game that is being played', function () {
+        xit('is the time in seconds that is passing by during the game that is being played', function () {
             jasmine.clock().install();
             var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
             jasmine.clock().tick(1001);
@@ -89,14 +89,27 @@ describe('GameManager', function () {
 
     describe('.onCardsAllFlippedHandler():', function () {
 
-        xit('calls the .saveStats() method of the Stats class', function () {
-            var stats = new memoryCardGame.Stats();
-            spyOn(stats, 'saveStats');
-            gameManager.onCardsAllFlippedHandler();
-            expect(stats.saveStats()).toHaveBeenCalled();
+        it('calls the .saveStats() method of the Stats class', function () {
+            var StatsClass = memoryCardGame.Stats;
+            var spy = jasmine.createSpy('spy');
+
+            memoryCardGame.Stats = function() {
+                this.saveStats = function() {
+                    spy();
+                };
+            };
+
+            var memoryTest = new memoryCardGame.GameManager({
+                gameContainer: CONST.SELECTOR.GAME_CONTAINER
+            });
+
+            memoryTest.onCardsAllFlippedHandler();
+            expect(spy).toHaveBeenCalled();
+
+            memoryCardGame.Stats = StatsClass;
         });
 
-        it('clears the timer', function () {
+        xit('clears the timer', function () {
             var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
             jasmine.clock().install();
             jasmine.clock().tick(1000);
