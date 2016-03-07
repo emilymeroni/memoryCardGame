@@ -9,14 +9,14 @@ memoryCardGame.GameManager = function (params) {
             TIMER_CLASS: 'timer'
         },
         SELECTOR: {
-            CONTAINER: 'body',
             TIMER_SELECTOR: '.timer'
         },
+        ROOT_NODE: $('body'),
         TIMER: 1000
     };
 
     var config = {
-        gameContainer: CONST.SELECTOR.CONTAINER
+        rootNode: CONST.ROOT_NODE
     };
 
     // Merge incoming params with internal config
@@ -48,7 +48,7 @@ memoryCardGame.GameManager = function (params) {
 
         startTimer();
 
-        $(config.gameContainer).append(self.container);
+        config.rootNode.append(self.container);
     };
 
     var endGame = function () {
