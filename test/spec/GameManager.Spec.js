@@ -15,13 +15,13 @@ describe('GameManager', function () {
                 ATTEMPTS_NUMBER: '.attempts-number',
                 DECK: '.memory-cards',
                 STATS: '.current-stats-container',
-                TIMER: '.timer',
-                GAME_CONTAINER: '.dummy'
-            }
+                TIMER: '.timer'
+            } ,
+            ROOT_NODE: $('.dummy')
         };
 
         gameManager = new memoryCardGame.GameManager({
-            gameContainer: CONST.SELECTOR.GAME_CONTAINER
+            rootNode: CONST.ROOT_NODE
         });
     });
 
@@ -100,7 +100,7 @@ describe('GameManager', function () {
             };
 
             var memoryTest = new memoryCardGame.GameManager({
-                gameContainer: CONST.SELECTOR.GAME_CONTAINER
+                rootNode: CONST.ROOT_NODE
             });
 
             memoryTest.onCardsAllFlippedHandler();
