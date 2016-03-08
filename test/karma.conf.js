@@ -17,6 +17,8 @@ module.exports = function(config) {
 
 			// Jasmine libs and configuration
 			"test/lib/jasmine/jasmine-jquery.js",
+			"test/lib/jasmine/jasmine-tree.min.js",
+			"test/lib/jasmine/jasmine-tree.css",
 
 			// Source files
 			"src/js/core.js",
