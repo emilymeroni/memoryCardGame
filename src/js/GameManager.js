@@ -11,12 +11,11 @@ memoryCardGame.GameManager = function (params) {
         SELECTOR: {
             TIMER_SELECTOR: '.timer'
         },
-        ROOT_NODE: $('body'),
         TIMER: 1000
     };
 
     var config = {
-        rootNode: CONST.ROOT_NODE
+        rootNode: $('body')
     };
 
     // Merge incoming params with internal config
