@@ -4,8 +4,11 @@ describe('GameManager', function () {
 
     var CONST;
     var gameManager;
+    var rootNode;
 
     beforeEach(function () {
+
+        rootNode = $('<div>');
 
         CONST = {
             CSS: {
@@ -16,12 +19,11 @@ describe('GameManager', function () {
                 DECK: '.memory-cards',
                 STATS: '.current-stats-container',
                 TIMER: '.timer'
-            } ,
-            ROOT_NODE: $('.dummy')
+            }
         };
 
         gameManager = new memoryCardGame.GameManager({
-            rootNode: CONST.ROOT_NODE
+            rootNode: rootNode
         });
     });
 
@@ -35,7 +37,9 @@ describe('GameManager', function () {
             expect(gameManager.container).toExist();
         });
 
-        xit('is contained within a configurable container', function () {
+        it('is contained within a configurable container', function () {
+            expect(rootNode.children().length).toEqual(1);
+            expect(rootNode.children().first()).toEqual(gameManager.container);
         });
 
         it('is associated to the "memory-board" CSS class', function () {
