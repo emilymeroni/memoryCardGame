@@ -18,6 +18,7 @@ var pkg = require("./package.json");
 
 var CONST = {
 	SRC_FOLDER: "src",
+	THEMES_FOLDER: "cardthemes",
 	DIST_FOLDER: "dist",
 	DIST_FILENAME_JS: "memoryCardGame.js",
 	MIN_SUFFIX: ".min.js",
@@ -53,6 +54,16 @@ function concatAndMinify(src, fileName){
 			.pipe(gulp.dest(CONST.DIST_FOLDER));
 }
 
+function generateThemeMap() {
+	var directoryMap = require("gulp-directory-map");
+
+	gulp.src(CONST.SRC_FOLDER + '/cardthemes/**/*.jpg')
+		.pipe(directoryMap({
+			filename: 'themes.json'
+		}))
+		.pipe(gulp.dest('dist'));
+}
+
 /* Tasks */
 
 gulp.task("coverage", function (done) {
@@ -72,6 +83,7 @@ gulp.task("scss", function(){
 
 gulp.task("dist", function() {
 	concatAndMinify(CONST.JS_SOURCE_FILES, CONST.DIST_FILENAME_JS);
+	generateThemeMap();
 });
 
 gulp.task("default", function(callback){

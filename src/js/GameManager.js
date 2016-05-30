@@ -15,7 +15,8 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var config = {
-        rootNode: $('body')
+        rootNode: $('body'),
+        cardTheme: 'dogs'
     };
 
     // Merge incoming params with internal config
@@ -34,13 +35,19 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
+        new memoryCardGame.UserOptions({
+            gameManagerInstance: self
+        });
+    };
 
+    this.startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
         deck = new memoryCardGame.Deck({
             cardsClass: config.cardsClass,
-            singleCardClass: config.singleCardClass
+            singleCardClass: config.singleCardClass,
+            selectedTheme: selectedTheme
         });
         deck.addObserver(self);
         self.container.append(deck.container);

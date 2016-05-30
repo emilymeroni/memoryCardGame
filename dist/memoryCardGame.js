@@ -41,14 +41,7 @@ memoryCardGame.Deck = function (params) {
         },
         CARD_COPIES: 2,
         TIME_FOR_FLIP: 500,
-        DEFAULT_IMAGES: [
-            'Hydrangeas.jpg',
-            'Jellyfish.jpg',
-            'Koala.jpg',
-            'Penguins.jpg',
-            'Tulips.jpg'
-        ],
-        IMAGE_BASE_URL: 'src\\images',
+        IMAGE_BASE_URL: 'src\\cardthemes',
         EVENT: {
             HAND_FINISHED: 'handFinished',
             HAND_INVALID: 'handInvalid',
@@ -59,7 +52,9 @@ memoryCardGame.Deck = function (params) {
         }
     };
 
-    var config = {};
+    var config = {
+        selectedTheme: null
+    };
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -68,30 +63,42 @@ memoryCardGame.Deck = function (params) {
 
     var flippedCards = [];
 
-    var imageMap = [];
-
     this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
     var self = this;
 
     var init = function () {
-        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
         createCards();
         shuffleCards();
         drawCards();
     };
 
     var createCards = function () {
-        for (var i = 0; i < imageMap.length; i++) {
-            for (var j = 0; j < CONST.CARD_COPIES; j++) {
-                var card = new memoryCardGame.Card({
-                    id: cards.length,
-                    image: CONST.IMAGE_BASE_URL + '\\' + imageMap[i]
-                });
-                card.addObserver(self);
-                cards.push(card);
+
+        $.ajaxSetup({
+            async: false
+        });
+
+        $.getJSON('dist/themes.json', function(json) {
+
+            var selectedThemeCards = json[config.selectedTheme];
+            for (var i = 0; i < selectedThemeCards.length; i++) {
+                for (var j = 0; j < CONST.CARD_COPIES; j++) {
+
+                    var card = new memoryCardGame.Card({
+                        id: cards.length,
+                        image: CONST.IMAGE_BASE_URL + '\\' + selectedThemeCards[i]
+                    });
+                    card.addObserver(self);
+                    cards.push(card);
+                }
             }
-        }
+        });
+
+        $.ajaxSetup({
+            async: true
+        });
+
     };
 
     var shuffleCards = function () {
@@ -356,12 +363,12 @@ memoryCardGame.GameManager = function (params) {
         SELECTOR: {
             TIMER_SELECTOR: '.timer'
         },
-        ROOT_NODE: $('body'),
         TIMER: 1000
     };
 
     var config = {
-        rootNode: CONST.ROOT_NODE
+        rootNode: $('body'),
+        cardTheme: 'dogs'
     };
 
     // Merge incoming params with internal config
@@ -380,13 +387,19 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
+        new memoryCardGame.UserOptions({
+            gameManagerInstance: self
+        });
+    };
 
+    this.startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
         deck = new memoryCardGame.Deck({
             cardsClass: config.cardsClass,
-            singleCardClass: config.singleCardClass
+            singleCardClass: config.singleCardClass,
+            selectedTheme: selectedTheme
         });
         deck.addObserver(self);
         self.container.append(deck.container);
@@ -433,6 +446,7 @@ memoryCardGame.UserOptions = function (params) {
             OPTION_PANEL_CLASS: 'user-options-panel'
         },
         TEXT: {
+            CARD_THEME: 'Card theme:',
             PICTURE_NUMBER: 'Number of pictures:',
             USER_OPTION_PANEL: 'User option panel',
             CLOSE: 'Close'
@@ -440,7 +454,8 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var config = {
-        cardCopies: null
+        cardCopies: null,
+        gameManagerInstance: null
     };
 
     // Merge incoming params with internal config
@@ -471,17 +486,31 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var drawOptionsForm = function (rootNode) {
+        drawCardThemeForm(rootNode);
+    };
+
+    var drawHowManyPicturesForm = function (rootNode) {
         var howManyPicturesLabel = $('<label></label>').text(CONST.TEXT.PICTURE_NUMBER);
         var howManyPictures = $('<input type="text">');
         howManyPicturesLabel.append(howManyPictures);
         rootNode.append(howManyPicturesLabel);
     };
 
+    var drawCardThemeForm = function (rootNode) {
+        var cardTemeText = $('<span></span>').text(CONST.TEXT.CARD_THEME);
+        rootNode.append(cardTemeText);
+        var dogsOption = $('<label><input name="theme" value="dogs" type="radio">Dogs</label>');
+        var catsOption = $('<label><input name="theme" value="cats" type="radio">Cats</label><br>');
+        rootNode.append(dogsOption);
+        rootNode.append(catsOption);
+    };
+
     var drawFooter = function (rootNode) {
         var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
         closeButton.click(function () {
             self.container.hide();
-            new memoryCardGame.GameManager();
+            var selectedTheme = $('input:radio[name=\'theme\']:checked').val();
+            config.gameManagerInstance.startGame(selectedTheme);
         });
         rootNode.append(closeButton);
     };

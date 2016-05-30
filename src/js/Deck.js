@@ -11,14 +11,7 @@ memoryCardGame.Deck = function (params) {
         },
         CARD_COPIES: 2,
         TIME_FOR_FLIP: 500,
-        DEFAULT_IMAGES: [
-            'Hydrangeas.jpg',
-            'Jellyfish.jpg',
-            'Koala.jpg',
-            'Penguins.jpg',
-            'Tulips.jpg'
-        ],
-        IMAGE_BASE_URL: 'src\\images',
+        IMAGE_BASE_URL: 'src\\cardthemes',
         EVENT: {
             HAND_FINISHED: 'handFinished',
             HAND_INVALID: 'handInvalid',
@@ -29,7 +22,9 @@ memoryCardGame.Deck = function (params) {
         }
     };
 
-    var config = {};
+    var config = {
+        selectedTheme: null
+    };
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -38,30 +33,42 @@ memoryCardGame.Deck = function (params) {
 
     var flippedCards = [];
 
-    var imageMap = [];
-
     this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
     var self = this;
 
     var init = function () {
-        imageMap = imageMap.concat(CONST.DEFAULT_IMAGES);
         createCards();
         shuffleCards();
         drawCards();
     };
 
     var createCards = function () {
-        for (var i = 0; i < imageMap.length; i++) {
-            for (var j = 0; j < CONST.CARD_COPIES; j++) {
-                var card = new memoryCardGame.Card({
-                    id: cards.length,
-                    image: CONST.IMAGE_BASE_URL + '\\' + imageMap[i]
-                });
-                card.addObserver(self);
-                cards.push(card);
+
+        $.ajaxSetup({
+            async: false
+        });
+
+        $.getJSON('dist/themes.json', function(json) {
+
+            var selectedThemeCards = json[config.selectedTheme];
+            for (var i = 0; i < selectedThemeCards.length; i++) {
+                for (var j = 0; j < CONST.CARD_COPIES; j++) {
+
+                    var card = new memoryCardGame.Card({
+                        id: cards.length,
+                        image: CONST.IMAGE_BASE_URL + '\\' + selectedThemeCards[i]
+                    });
+                    card.addObserver(self);
+                    cards.push(card);
+                }
             }
-        }
+        });
+
+        $.ajaxSetup({
+            async: true
+        });
+
     };
 
     var shuffleCards = function () {
