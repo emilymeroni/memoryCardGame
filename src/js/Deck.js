@@ -52,17 +52,17 @@ memoryCardGame.Deck = function (params) {
         $.getJSON('dist/themes.json', function(json) {
 
             var selectedThemeCards = json[config.selectedTheme];
-            for (var i = 0; i < selectedThemeCards.length; i++) {
+            $.each(selectedThemeCards, function( key, val ) {
                 for (var j = 0; j < CONST.CARD_COPIES; j++) {
 
                     var card = new memoryCardGame.Card({
                         id: cards.length,
-                        image: CONST.IMAGE_BASE_URL + '\\' + selectedThemeCards[i]
+                        image: CONST.IMAGE_BASE_URL + '\\' + val
                     });
                     card.addObserver(self);
                     cards.push(card);
                 }
-            }
+            });
         });
 
         $.ajaxSetup({
