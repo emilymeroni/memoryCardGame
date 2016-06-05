@@ -20,9 +20,7 @@ memoryCardGame.UserOptions = function (params) {
         }
     };
 
-    var config = {
-        rootNode: null
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -42,8 +40,6 @@ memoryCardGame.UserOptions = function (params) {
         drawOptionsForm(userOptionsPanel);
         drawFooter(userOptionsPanel);
         self.container.append(userOptionsPanel);
-        //TODO: Create a global class for memoryGame and append panel to it
-        config.rootNode.append(self.container);
     };
 
     var drawHeader = function (rootNode) {

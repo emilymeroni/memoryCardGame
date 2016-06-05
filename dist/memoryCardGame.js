@@ -357,6 +357,7 @@ memoryCardGame.GameManager = function (params) {
     var CONST = {
         CSS: {
             ROOT: 'memory-card-game',
+            GAME_CONTAINER: 'game-container',
             BOARD_CLASS: 'memory-board',
             TIMER_CLASS: 'timer'
         },
@@ -381,18 +382,22 @@ memoryCardGame.GameManager = function (params) {
 
     var timerInterval;
 
+    var gameContainer = $('<div></div>').addClass(CONST.CSS.GAME_CONTAINER);
+
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var self = this;
 
     var init = function () {
-        var userOptions = new memoryCardGame.UserOptions(config.rootNode);
+        var userOptions = new memoryCardGame.UserOptions();
         userOptions.addObserver(self);
+        self.container.append(userOptions.container);
+        config.rootNode.append(self.container);
     };
 
     var startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
-        self.container.append(stats.container);
+        gameContainer.append(stats.container);
 
         deck = new memoryCardGame.Deck({
             cardsClass: config.cardsClass,
@@ -400,10 +405,11 @@ memoryCardGame.GameManager = function (params) {
             selectedTheme: selectedTheme
         });
         deck.addObserver(self);
-        self.container.append(deck.container);
+        gameContainer.append(deck.container);
 
         startTimer();
 
+        self.container.empty().append(gameContainer);
         config.rootNode.append(self.container);
     };
 
@@ -414,7 +420,7 @@ memoryCardGame.GameManager = function (params) {
 
     var startTimer = function () {
         var timerContainer = $('<div></div>').addClass(CONST.CSS.TIMER_CLASS);
-        self.container.append(timerContainer.text(timer));
+        gameContainer.append(timerContainer.text(timer));
         timerInterval = setInterval(function () {
             timerContainer.text(++timer);
         }, CONST.TIMER);
@@ -460,9 +466,7 @@ memoryCardGame.UserOptions = function (params) {
         }
     };
 
-    var config = {
-        rootNode: null
-    };
+    var config = {};
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -482,8 +486,6 @@ memoryCardGame.UserOptions = function (params) {
         drawOptionsForm(userOptionsPanel);
         drawFooter(userOptionsPanel);
         self.container.append(userOptionsPanel);
-        //TODO: Create a global class for memoryGame and append panel to it
-        config.rootNode.append(self.container);
     };
 
     var drawHeader = function (rootNode) {
