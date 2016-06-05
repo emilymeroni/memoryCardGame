@@ -43,13 +43,13 @@ describe('GameManager', function () {
             expect(gameManager.container).toExist();
         });
 
+        it('is associated to the "memory-card-game" CSS class', function () {
+            expect(gameManager.container).toHaveClass(CONST.CSS.ROOT);
+        });
+
         it('is contained within a configurable container', function () {
             expect(rootNode.children().length).toEqual(1);
             expect(rootNode.children().first()).toEqual(gameManager.container);
-        });
-
-        it('is associated to the "memory-card-game" CSS class', function () {
-            expect(gameManager.container).toHaveClass(CONST.CSS.ROOT);
         });
     });
 
