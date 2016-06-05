@@ -452,7 +452,7 @@ memoryCardGame.UserOptions = function (params) {
 
     var CONST = {
         CSS: {
-            USER_OPTIONS_WRAPPER: 'user-options-wrapper',
+            ROOT: 'user-options-wrapper',
             OPTION_PANEL_CLASS: 'user-options-panel'
         },
         EVENT: {
@@ -473,7 +473,7 @@ memoryCardGame.UserOptions = function (params) {
 
     var self = this;
 
-    self.container = $('<div></div>').addClass(CONST.CSS.USER_OPTIONS_WRAPPER);
+    self.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var init = function () {
         draw();
