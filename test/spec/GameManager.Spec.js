@@ -30,8 +30,6 @@ describe('GameManager', function () {
         data = {
             selectedTheme: 'dogs'
         };
-
-        gameManager.onChosenOptionsHandler(data.selectedTheme);
     });
 
     it('is the class that I need to instantiate to play a new memory game', function () {
@@ -50,25 +48,30 @@ describe('GameManager', function () {
         describe('when the user has decided his options for the game:', function () {
 
             it('is contained within a configurable container', function () {
+                gameManager.onChosenOptionsHandler(data.selectedTheme);
                 expect(rootNode.children().length).toEqual(1);
                 expect(rootNode.children().first()).toEqual(gameManager.container);
             });
 
             it('is associated to the "memory-card-game" CSS class', function () {
+                gameManager.onChosenOptionsHandler(data.selectedTheme);
                 expect(gameManager.container).toHaveClass(CONST.CSS.ROOT);
             });
 
             describe('contains:', function () {
 
                 it('an instance of a deck', function () {
+                    gameManager.onChosenOptionsHandler(data.selectedTheme);
                     expect(gameManager.container.find(CONST.SELECTOR.DECK).length).toEqual(1);
                 });
 
                 it('an instance of a statistics panel', function () {
+                    gameManager.onChosenOptionsHandler(data.selectedTheme);
                     expect(gameManager.container.find(CONST.SELECTOR.STATS).length).toEqual(1);
                 });
 
                 it('a timer', function () {
+                    gameManager.onChosenOptionsHandler(data.selectedTheme);
                     expect(gameManager.container.find(CONST.SELECTOR.TIMER).length).toEqual(1);
                 });
             });
@@ -78,6 +81,7 @@ describe('GameManager', function () {
     xdescribe('the game timer:', function () {
 
         it('is the time in seconds that is passing by during the game that is being played', function () {
+            gameManager.onChosenOptionsHandler(data.selectedTheme);
             jasmine.clock().install();
             var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
             jasmine.clock().tick(1001);
@@ -89,6 +93,7 @@ describe('GameManager', function () {
     describe('.onHandFinishedHandler():', function () {
 
         it('increases the attempts counter by one', function () {
+            gameManager.onChosenOptionsHandler(data.selectedTheme);
             var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
             gameManager.onHandFinishedHandler();
             expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
@@ -98,6 +103,7 @@ describe('GameManager', function () {
     describe('.onHandInvalidHandler():', function () {
 
         it('increases the attempts counter by one', function () {
+            gameManager.onChosenOptionsHandler(data.selectedTheme);
             var attemptsNumber = gameManager.container.find(CONST.SELECTOR.ATTEMPTS_NUMBER);
             gameManager.onHandInvalidHandler();
             expect(parseInt(attemptsNumber.text(), 10)).toEqual(1);
@@ -130,6 +136,7 @@ describe('GameManager', function () {
         });
 
         xit('clears the timer', function () {
+            gameManager.onChosenOptionsHandler(data.selectedTheme);
             var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
             jasmine.clock().install();
             jasmine.clock().tick(1000);
