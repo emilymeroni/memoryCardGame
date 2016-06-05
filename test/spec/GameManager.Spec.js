@@ -29,7 +29,7 @@ describe('GameManager', function () {
 
         data = {
             selectedTheme: 'dogs'
-        }
+        };
     });
 
     it('is the class that I need to instantiate to play a new memory game', function () {
@@ -110,10 +110,9 @@ describe('GameManager', function () {
         });
     });
 
-    xdescribe('.onCardsAllFlippedHandler():', function () {
+    describe('.onCardsAllFlippedHandler():', function () {
 
         it('calls the .saveStats() method of the Stats class', function () {
-            gameManager.onChosenOptionsHandler(data.selectedTheme);
             var StatsClass = memoryCardGame.Stats;
             var spy = jasmine.createSpy('spy');
 
@@ -124,8 +123,11 @@ describe('GameManager', function () {
             };
 
             var memoryTest = new memoryCardGame.GameManager({
-                rootNode: CONST.ROOT_NODE
+                rootNode: rootNode
             });
+
+
+            memoryTest.onChosenOptionsHandler(data.selectedTheme);
 
             memoryTest.onCardsAllFlippedHandler();
             expect(spy).toHaveBeenCalled();
@@ -133,7 +135,7 @@ describe('GameManager', function () {
             memoryCardGame.Stats = StatsClass;
         });
 
-        it('clears the timer', function () {
+        xit('clears the timer', function () {
             gameManager.onChosenOptionsHandler(data.selectedTheme);
             var timerContainer = gameManager.container.find(CONST.SELECTOR.TIMER);
             jasmine.clock().install();
