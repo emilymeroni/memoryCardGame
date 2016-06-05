@@ -49,10 +49,10 @@ memoryCardGame.Deck = function (params) {
             async: false
         });
 
-        $.getJSON('dist/themes.json', function(json) {
+        $.getJSON('dist/themes.json', function (json) {
 
             var selectedThemeCards = json[config.selectedTheme];
-            $.each(selectedThemeCards, function( key, val ) {
+            $.each(selectedThemeCards, function (key, val) {
                 for (var j = 0; j < CONST.CARD_COPIES; j++) {
 
                     var card = new memoryCardGame.Card({

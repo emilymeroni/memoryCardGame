@@ -79,10 +79,10 @@ memoryCardGame.Deck = function (params) {
             async: false
         });
 
-        $.getJSON('dist/themes.json', function(json) {
+        $.getJSON('dist/themes.json', function (json) {
 
             var selectedThemeCards = json[config.selectedTheme];
-            $.each(selectedThemeCards, function( key, val ) {
+            $.each(selectedThemeCards, function (key, val) {
                 for (var j = 0; j < CONST.CARD_COPIES; j++) {
 
                     var card = new memoryCardGame.Card({
@@ -387,12 +387,11 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        new memoryCardGame.UserOptions({
-            gameManagerInstance: self
-        });
+        var userOptions = new memoryCardGame.UserOptions();
+        userOptions.addObserver(self);
     };
 
-    this.startGame = function (selectedTheme) {
+    var startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
@@ -422,6 +421,10 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
+    this.onStartGameHandler = function (data) {
+        startGame(data.selectedTheme);
+    };
+
     this.onHandFinishedHandler = function () {
         stats.updateAttemptsCounter();
     };
@@ -440,10 +443,15 @@ memoryCardGame.UserOptions = function (params) {
 
     'use strict';
 
+    luga.extend(luga.Notifier, this);
+
     var CONST = {
         CSS: {
             USER_OPTIONS_WRAPPER: 'user-options-wrapper',
             OPTION_PANEL_CLASS: 'user-options-panel'
+        },
+        EVENT: {
+            START_GAME: 'startGame'
         },
         TEXT: {
             CARD_THEME: 'Card theme:',
@@ -454,8 +462,7 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var config = {
-        cardCopies: null,
-        gameManagerInstance: null
+        cardCopies: null
     };
 
     // Merge incoming params with internal config
@@ -510,7 +517,9 @@ memoryCardGame.UserOptions = function (params) {
         closeButton.click(function () {
             self.container.hide();
             var selectedTheme = $('input:radio[name=\'theme\']:checked').val();
-            config.gameManagerInstance.startGame(selectedTheme);
+            self.notifyObservers(CONST.EVENT.START_GAME, {
+                selectedTheme: selectedTheme
+            });
         });
         rootNode.append(closeButton);
     };

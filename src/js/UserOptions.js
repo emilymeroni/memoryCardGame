@@ -2,10 +2,15 @@ memoryCardGame.UserOptions = function (params) {
 
     'use strict';
 
+    luga.extend(luga.Notifier, this);
+
     var CONST = {
         CSS: {
             USER_OPTIONS_WRAPPER: 'user-options-wrapper',
             OPTION_PANEL_CLASS: 'user-options-panel'
+        },
+        EVENT: {
+            START_GAME: 'startGame'
         },
         TEXT: {
             CARD_THEME: 'Card theme:',
@@ -16,8 +21,7 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var config = {
-        cardCopies: null,
-        gameManagerInstance: null
+        cardCopies: null
     };
 
     // Merge incoming params with internal config
@@ -72,7 +76,9 @@ memoryCardGame.UserOptions = function (params) {
         closeButton.click(function () {
             self.container.hide();
             var selectedTheme = $('input:radio[name=\'theme\']:checked').val();
-            config.gameManagerInstance.startGame(selectedTheme);
+            self.notifyObservers(CONST.EVENT.START_GAME, {
+                selectedTheme: selectedTheme
+            });
         });
         rootNode.append(closeButton);
     };

@@ -35,12 +35,11 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        new memoryCardGame.UserOptions({
-            gameManagerInstance: self
-        });
+        var userOptions = new memoryCardGame.UserOptions();
+        userOptions.addObserver(self);
     };
 
-    this.startGame = function (selectedTheme) {
+    var startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         self.container.append(stats.container);
 
@@ -68,6 +67,10 @@ memoryCardGame.GameManager = function (params) {
         timerInterval = setInterval(function () {
             timerContainer.text(++timer);
         }, CONST.TIMER);
+    };
+
+    this.onStartGameHandler = function (data) {
+        startGame(data.selectedTheme);
     };
 
     this.onHandFinishedHandler = function () {
