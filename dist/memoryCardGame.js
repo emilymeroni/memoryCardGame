@@ -367,8 +367,7 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var config = {
-        rootNode: $('body'),
-        cardTheme: 'dogs'
+        rootNode: $('body')
     };
 
     // Merge incoming params with internal config
@@ -387,7 +386,7 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        var userOptions = new memoryCardGame.UserOptions();
+        var userOptions = new memoryCardGame.UserOptions(config.rootNode);
         userOptions.addObserver(self);
     };
 
@@ -462,7 +461,7 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var config = {
-        cardCopies: null
+        rootNode: null
     };
 
     // Merge incoming params with internal config
@@ -484,7 +483,7 @@ memoryCardGame.UserOptions = function (params) {
         drawFooter(userOptionsPanel);
         self.container.append(userOptionsPanel);
         //TODO: Create a global class for memoryGame and append panel to it
-        $('body').append(self.container);
+        config.rootNode.append(self.container);
     };
 
     var drawHeader = function (rootNode) {
