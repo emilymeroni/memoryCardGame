@@ -69,7 +69,7 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
-    this.onStartGameHandler = function (data) {
+    this.onChosenOptionsHandler = function (data) {
         startGame(data.selectedTheme);
     };
 

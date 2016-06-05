@@ -421,7 +421,7 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
-    this.onStartGameHandler = function (data) {
+    this.onChosenOptionsHandler = function (data) {
         startGame(data.selectedTheme);
     };
 
@@ -451,7 +451,7 @@ memoryCardGame.UserOptions = function (params) {
             OPTION_PANEL_CLASS: 'user-options-panel'
         },
         EVENT: {
-            START_GAME: 'startGame'
+            CHOSEN_OPTIONS: 'chosenOptions'
         },
         TEXT: {
             CARD_THEME: 'Card theme:',
@@ -517,7 +517,7 @@ memoryCardGame.UserOptions = function (params) {
         closeButton.click(function () {
             self.container.hide();
             var selectedTheme = $('input:radio[name=\'theme\']:checked').val();
-            self.notifyObservers(CONST.EVENT.START_GAME, {
+            self.notifyObservers(CONST.EVENT.CHOSEN_OPTIONS, {
                 selectedTheme: selectedTheme
             });
         });
