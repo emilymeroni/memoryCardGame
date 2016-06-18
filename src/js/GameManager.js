@@ -9,6 +9,9 @@ memoryCardGame.GameManager = function (params) {
             BOARD_CLASS: 'memory-board',
             TIMER_CLASS: 'timer'
         },
+        DATA: {
+            URL: 'dist/themes.json'
+        },
         SELECTOR: {
             TIMER_SELECTOR: '.timer'
         },
@@ -48,26 +51,24 @@ memoryCardGame.GameManager = function (params) {
     };
 
     var getCardThemesData = function () {
-        $.ajaxSetup({
-            async: false
-        });
-
-        $.getJSON('dist/themes.json', function (cardThemesJson) {
-            return cardThemesJson;
-        });
-
-        $.ajaxSetup({
-            async: true
+        $.ajax({
+            type: 'POST',
+            url: CONST.DATA.URL,
+            async: true,
+            success: function(cardThemesJson) {
+                return cardThemesJson;
+            },
+            error: function() {
+                console.log('could not load data');
+            }
         });
     };
 
     var getCardThemesList = function () {
         var cardThemesList = [];
-
         $.each(cardThemesData, function (key, val) {
             cardThemesList.push(val);
         });
-
         return cardThemesList;
     };
 
