@@ -1,3 +1,16 @@
+/**
+ * User Options widget
+ *
+ * The User Options widget allows the user to choose which options he or she would like to play a new game with.
+ *
+ * @param {array} params.cardThemesList     A list of all the available decks
+ *
+ * @constructor
+ * @extends luga.Notifier
+ *
+ * @fires chosenOptions
+ */
+
 memoryCardGame.UserOptions = function (params) {
 
     'use strict';
@@ -27,8 +40,14 @@ memoryCardGame.UserOptions = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {memoryCardGame.UserOptions}
+     */
     var self = this;
 
+    /**
+     * @type {jQuery}
+     */
     self.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var init = function () {
@@ -36,7 +55,6 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var draw = function () {
-        //TODO: Create utils library for dom elements
         var userOptionsPanel = $('<div></div>').addClass(CONST.CSS.OPTION_PANEL_CLASS);
         drawHeader(userOptionsPanel);
         drawOptionsForm(userOptionsPanel);
@@ -44,22 +62,27 @@ memoryCardGame.UserOptions = function (params) {
         self.container.append(userOptionsPanel);
     };
 
+    /**
+     * Draws the title
+     * @param {jQuery} rootNode
+     */
     var drawHeader = function (rootNode) {
         var userOptionsTitle = $('<h2></h2>').text(CONST.TEXT.USER_OPTION_PANEL);
         rootNode.append(userOptionsTitle);
     };
 
+    /**
+     * Draws all the available options
+     * @param {jQuery} rootNode
+     */
     var drawOptionsForm = function (rootNode) {
         drawCardThemeForm(rootNode);
     };
 
-    var drawHowManyPicturesForm = function (rootNode) {
-        var howManyPicturesLabel = $('<label></label>').text(CONST.TEXT.PICTURE_NUMBER);
-        var howManyPictures = $('<input type="text">');
-        howManyPicturesLabel.append(howManyPictures);
-        rootNode.append(howManyPicturesLabel);
-    };
-
+    /**
+     * Draws the theme options
+     * @param {jQuery} rootNode
+     */
     //TODO: Put some picture preview
     var drawCardThemeForm = function (rootNode) {
         var cardTemeText = $('<span></span>').text(CONST.TEXT.CARD_THEME);
@@ -74,6 +97,11 @@ memoryCardGame.UserOptions = function (params) {
         }
     };
 
+    /**
+     * Draws the footer area
+     * @param {jQuery} rootNode
+     * @fires chosenOptions
+     */
     var drawFooter = function (rootNode) {
         var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
         closeButton.click(function () {
