@@ -12,6 +12,7 @@ var sass = require("gulp-sass");
 var sourcemaps = require("gulp-sourcemaps");
 var uglify = require("gulp-uglify");
 var zip = require("gulp-zip");
+var directoryMap = require("gulp-directory-map");
 var karmaServer = require("karma").Server;
 
 var pkg = require("./package.json");
@@ -55,7 +56,6 @@ function concatAndMinify(src, fileName){
 }
 
 function generateThemeMap() {
-	var directoryMap = require("gulp-directory-map");
 
 	gulp.src(CONST.SRC_FOLDER + '/cardthemes/**/*.jpg')
 		.pipe(directoryMap({

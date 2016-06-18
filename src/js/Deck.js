@@ -38,37 +38,37 @@ memoryCardGame.Deck = function (params) {
     var self = this;
 
     var init = function () {
-        createCards();
+        setupCards();
         shuffleCards();
         drawCards();
     };
 
-    var createCards = function () {
-
+    var setupCards = function () {
         $.ajaxSetup({
             async: false
         });
 
         $.getJSON('dist/themes.json', function (json) {
-
-            var selectedThemeCards = json[config.selectedTheme];
-            $.each(selectedThemeCards, function (key, val) {
-                for (var j = 0; j < CONST.CARD_COPIES; j++) {
-
-                    var card = new memoryCardGame.Card({
-                        id: cards.length,
-                        image: CONST.IMAGE_BASE_URL + '\\' + val
-                    });
-                    card.addObserver(self);
-                    cards.push(card);
-                }
-            });
+            createCards(json[config.selectedTheme]);
         });
 
         $.ajaxSetup({
             async: true
         });
+    };
 
+    var createCards = function(selectedThemeCards) {
+        $.each(selectedThemeCards, function (key, val) {
+            for (var j = 0; j < CONST.CARD_COPIES; j++) {
+
+                var card = new memoryCardGame.Card({
+                    id: cards.length,
+                    image: CONST.IMAGE_BASE_URL + '\\' + val
+                });
+                card.addObserver(self);
+                cards.push(card);
+            }
+        });
     };
 
     var shuffleCards = function () {
