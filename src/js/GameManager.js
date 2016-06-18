@@ -168,7 +168,6 @@ memoryCardGame.GameManager = function (params) {
         stats.updateAttemptsCounter();
     };
 
-
     /**
      * Listens to the "cardsAllFlipped" event notification broadcast by the Deck
      */

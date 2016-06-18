@@ -37,7 +37,6 @@ memoryCardGame.UserOptions = function (params) {
         cardThemesList: null
     };
 
-    // Merge incoming params with internal config
     $.extend(config, params);
 
     /**
