@@ -22,6 +22,8 @@ memoryCardGame.GameManager = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    var cardThemes;
+
     var deck;
 
     var stats;
@@ -37,10 +39,36 @@ memoryCardGame.GameManager = function (params) {
     var self = this;
 
     var init = function () {
-        var userOptions = new memoryCardGame.UserOptions();
+        cardThemes = getCardThemes();
+        var cardThemesList = getCardThemesList();
+        var userOptions = new memoryCardGame.UserOptions(cardThemesList);
         userOptions.addObserver(self);
         self.container.append(userOptions.container);
         config.rootNode.append(self.container);
+    };
+
+    var getCardThemes = function () {
+        $.ajaxSetup({
+            async: false
+        });
+
+        $.getJSON('dist/themes.json', function (cardThemesJson) {
+            return cardThemesJson;
+        });
+
+        $.ajaxSetup({
+            async: true
+        });
+    };
+
+    var getCardThemesList = function () {
+        var cardThemesList = [];
+
+        $.each(cardThemes, function (key, val) {
+            cardThemesList.push(val);
+        });
+
+        return cardThemesList;
     };
 
     var startGame = function (selectedTheme) {

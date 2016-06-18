@@ -20,7 +20,9 @@ memoryCardGame.UserOptions = function (params) {
         }
     };
 
-    var config = {};
+    var config = {
+        cardThemesList: null
+    };
 
     // Merge incoming params with internal config
     $.extend(config, params);
@@ -58,13 +60,18 @@ memoryCardGame.UserOptions = function (params) {
         rootNode.append(howManyPicturesLabel);
     };
 
+    //TODO: Put some picture preview
     var drawCardThemeForm = function (rootNode) {
         var cardTemeText = $('<span></span>').text(CONST.TEXT.CARD_THEME);
         rootNode.append(cardTemeText);
-        var dogsOption = $('<label><input name="theme" value="dogs" type="radio">Dogs</label>');
-        var catsOption = $('<label><input name="theme" value="cats" type="radio">Cats</label><br>');
-        rootNode.append(dogsOption);
-        rootNode.append(catsOption);
+
+        for (var i = 0; i < config.cardThemesList.length; i++) {
+            var option = $('<label><input name="theme" type="radio"></label>');
+            var cardTheme = config.cardThemesList[i];
+            option.val(cardTheme);
+            option.text(cardTheme.toUpperCase());
+            rootNode.append(option);
+        }
     };
 
     var drawFooter = function (rootNode) {
