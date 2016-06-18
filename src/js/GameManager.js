@@ -1,3 +1,15 @@
+/**
+ * Game Manager widget
+ * The GameManager widget allows the user to create and start a new Memory card game.
+ *
+ * @param {jQuery} params.rootNode  The root node of the widget
+ * @constructor
+ *
+ * @listens chosenOptions
+ * @listens handFinished
+ * @listens handInvalid
+ * @listens cardsAllFlipped
+ */
 memoryCardGame.GameManager = function (params) {
 
     'use strict';
@@ -25,31 +37,59 @@ memoryCardGame.GameManager = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {json}
+     */
     var cardThemesData;
 
+    /**
+     * @type {memoryCardGame.Deck}
+     */
     var deck;
 
+    /**
+     * @type {memoryCardGame.Stats}
+     */
     var stats;
 
+    /**
+     * @type {number}
+     */
     var timer = 0;
 
+    /**
+     * @type {number}
+     */
     var timerInterval;
 
+    /**
+     * @type {jQuery}
+     */
     var gameContainer = $('<div></div>').addClass(CONST.CSS.GAME_CONTAINER);
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.GameManager}
+     */
     var self = this;
 
     var init = function () {
         cardThemesData = getCardThemesData();
         var cardThemesList = getCardThemesList();
+
         var userOptions = new memoryCardGame.UserOptions(cardThemesList);
         userOptions.addObserver(self);
         self.container.append(userOptions.container);
         config.rootNode.append(self.container);
     };
 
+    /**
+     * Gets all the available card themes with their respective cards
+     */
     var getCardThemesData = function () {
         $.ajax({
             type: 'POST',
@@ -72,13 +112,17 @@ memoryCardGame.GameManager = function (params) {
         return cardThemesList;
     };
 
+    /**
+     * Initialises all the needed objects to play a game and displays them
+     * on the page with the selected theme.
+     *
+     * @param {String} selectedTheme
+     */
     var startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         gameContainer.append(stats.container);
 
         deck = new memoryCardGame.Deck({
-            cardsClass: config.cardsClass,
-            singleCardClass: config.singleCardClass,
             cardList: cardThemesData[selectedTheme]
         });
         deck.addObserver(self);
@@ -103,18 +147,31 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
+    /**
+     * Listens to the "chosenOptions" event notifications broadcast by the UserOptions
+     */
     this.onChosenOptionsHandler = function (data) {
         startGame(data.selectedTheme);
     };
 
+    /**
+     * Listens to the "handFinished" event notification broadcast by the Deck
+     */
     this.onHandFinishedHandler = function () {
         stats.updateAttemptsCounter();
     };
 
+    /**
+     * Listens to the "handInvalid" event notification broadcast by the Deck
+     */
     this.onHandInvalidHandler = function () {
         stats.updateAttemptsCounter();
     };
 
+
+    /**
+     * Listens to the "cardsAllFlipped" event notification broadcast by the Deck
+     */
     this.onCardsAllFlippedHandler = function () {
         endGame();
     };
