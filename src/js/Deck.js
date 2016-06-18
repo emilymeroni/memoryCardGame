@@ -23,7 +23,7 @@ memoryCardGame.Deck = function (params) {
     };
 
     var config = {
-        selectedTheme: null
+        cardList: null
     };
 
     // Merge incoming params with internal config
@@ -44,21 +44,7 @@ memoryCardGame.Deck = function (params) {
     };
 
     var setupCards = function () {
-        $.ajaxSetup({
-            async: false
-        });
-
-        $.getJSON('dist/themes.json', function (json) {
-            createCards(json[config.selectedTheme]);
-        });
-
-        $.ajaxSetup({
-            async: true
-        });
-    };
-
-    var createCards = function(selectedThemeCards) {
-        $.each(selectedThemeCards, function (key, val) {
+        $.each(config.cardList, function (key, val) {
             for (var j = 0; j < CONST.CARD_COPIES; j++) {
 
                 var card = new memoryCardGame.Card({
