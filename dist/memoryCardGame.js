@@ -336,6 +336,18 @@ memoryCardGame.Stats = function (params) {
 };
 
 
+/**
+ * Game Manager widget
+ * The GameManager widget allows the user to create and start a new Memory card game.
+ *
+ * @param {jQuery} params.rootNode  The root node of the widget
+ * @constructor
+ *
+ * @listens chosenOptions
+ * @listens handFinished
+ * @listens handInvalid
+ * @listens cardsAllFlipped
+ */
 memoryCardGame.GameManager = function (params) {
 
     'use strict';
@@ -363,60 +375,89 @@ memoryCardGame.GameManager = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {json}
+     */
     var cardThemesData;
 
+    /**
+     * @type {memoryCardGame.Deck}
+     */
     var deck;
 
+    /**
+     * @type {memoryCardGame.Stats}
+     */
     var stats;
 
+    /**
+     * @type {number}
+     */
     var timer = 0;
 
+    /**
+     * @type {number}
+     */
     var timerInterval;
 
+    /**
+     * @type {jQuery}
+     */
     var gameContainer = $('<div></div>').addClass(CONST.CSS.GAME_CONTAINER);
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.GameManager}
+     */
     var self = this;
 
     var init = function () {
         cardThemesData = getCardThemesData();
-        var cardThemesList = getCardThemesList();
-        var userOptions = new memoryCardGame.UserOptions(cardThemesList);
+
+        var userOptions = new memoryCardGame.UserOptions({
+            cardThemesList: Object.keys(cardThemesData),
+        });
         userOptions.addObserver(self);
         self.container.append(userOptions.container);
         config.rootNode.append(self.container);
     };
 
+    /**
+     * Gets all the available card themes with their respective cards
+     */
     var getCardThemesData = function () {
+
+        var cardThemesJson;
         $.ajax({
             type: 'POST',
             url: CONST.DATA.URL,
-            async: true,
-            success: function(cardThemesJson) {
-                return cardThemesJson;
+            async: false,
+            success: function(data) {
+                cardThemesJson = data;
             },
             error: function() {
                 console.log('could not load data');
             }
         });
+
+        return cardThemesJson;
     };
 
-    var getCardThemesList = function () {
-        var cardThemesList = [];
-        $.each(cardThemesData, function (key, val) {
-            cardThemesList.push(val);
-        });
-        return cardThemesList;
-    };
-
+    /**
+     * Initialises all the needed objects to play a game and displays them
+     * on the page with the selected theme.
+     *
+     * @param {String} selectedTheme
+     */
     var startGame = function (selectedTheme) {
         stats = new memoryCardGame.Stats();
         gameContainer.append(stats.container);
 
         deck = new memoryCardGame.Deck({
-            cardsClass: config.cardsClass,
-            singleCardClass: config.singleCardClass,
             cardList: cardThemesData[selectedTheme]
         });
         deck.addObserver(self);
@@ -441,24 +482,49 @@ memoryCardGame.GameManager = function (params) {
         }, CONST.TIMER);
     };
 
+    /**
+     * Listens to the "chosenOptions" event notifications broadcast by the UserOptions
+     */
     this.onChosenOptionsHandler = function (data) {
         startGame(data.selectedTheme);
     };
 
+    /**
+     * Listens to the "handFinished" event notification broadcast by the Deck
+     */
     this.onHandFinishedHandler = function () {
         stats.updateAttemptsCounter();
     };
 
+    /**
+     * Listens to the "handInvalid" event notification broadcast by the Deck
+     */
     this.onHandInvalidHandler = function () {
         stats.updateAttemptsCounter();
     };
 
+    /**
+     * Listens to the "cardsAllFlipped" event notification broadcast by the Deck
+     */
     this.onCardsAllFlippedHandler = function () {
         endGame();
     };
 
     init.call(this);
 };
+/**
+ * User Options widget
+ *
+ * The User Options widget allows the user to choose which options he or she would like to play a new game with.
+ *
+ * @param {array} params.cardThemesList     A list of all the available decks
+ *
+ * @constructor
+ * @extends luga.Notifier
+ *
+ * @fires chosenOptions
+ */
+
 memoryCardGame.UserOptions = function (params) {
 
     'use strict';
@@ -485,11 +551,16 @@ memoryCardGame.UserOptions = function (params) {
         cardThemesList: null
     };
 
-    // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {memoryCardGame.UserOptions}
+     */
     var self = this;
 
+    /**
+     * @type {jQuery}
+     */
     self.container = $('<div></div>').addClass(CONST.CSS.ROOT);
 
     var init = function () {
@@ -497,7 +568,6 @@ memoryCardGame.UserOptions = function (params) {
     };
 
     var draw = function () {
-        //TODO: Create utils library for dom elements
         var userOptionsPanel = $('<div></div>').addClass(CONST.CSS.OPTION_PANEL_CLASS);
         drawHeader(userOptionsPanel);
         drawOptionsForm(userOptionsPanel);
@@ -505,37 +575,50 @@ memoryCardGame.UserOptions = function (params) {
         self.container.append(userOptionsPanel);
     };
 
+    /**
+     * Draws the title
+     * @param {jQuery} rootNode
+     */
     var drawHeader = function (rootNode) {
         var userOptionsTitle = $('<h2></h2>').text(CONST.TEXT.USER_OPTION_PANEL);
         rootNode.append(userOptionsTitle);
     };
 
+    /**
+     * Draws all the available options
+     * @param {jQuery} rootNode
+     */
     var drawOptionsForm = function (rootNode) {
         drawCardThemeForm(rootNode);
     };
 
-    var drawHowManyPicturesForm = function (rootNode) {
-        var howManyPicturesLabel = $('<label></label>').text(CONST.TEXT.PICTURE_NUMBER);
-        var howManyPictures = $('<input type="text">');
-        howManyPicturesLabel.append(howManyPictures);
-        rootNode.append(howManyPicturesLabel);
-    };
-
+    /**
+     * Draws the theme options
+     * @param {jQuery} rootNode
+     */
     //TODO: Put some picture preview
     var drawCardThemeForm = function (rootNode) {
         var cardTemeText = $('<span></span>').text(CONST.TEXT.CARD_THEME);
         rootNode.append(cardTemeText);
 
         for (var i = 0; i < config.cardThemesList.length; i++) {
-            var option = $('<label><input name="theme" type="radio"></label>');
+            var optionWrapper = $('<label class="themeOption"></label>');
+            var option = $('<input name="theme" type="radio">');
             var cardTheme = config.cardThemesList[i];
             option.val(cardTheme);
-            option.text(cardTheme.toUpperCase());
-            rootNode.append(option);
+            optionWrapper.text(cardTheme);
+            optionWrapper.prepend(option);
+            rootNode.append(optionWrapper);
         }
     };
 
+    /**
+     * Draws the footer area
+     * @param {jQuery} rootNode
+     * @fires chosenOptions
+     */
     var drawFooter = function (rootNode) {
+        var footerContainer = $('<div></div>');
         var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
         closeButton.click(function () {
             self.container.hide();
@@ -544,7 +627,8 @@ memoryCardGame.UserOptions = function (params) {
                 selectedTheme: selectedTheme
             });
         });
-        rootNode.append(closeButton);
+        footerContainer.append(closeButton);
+        rootNode.append(footerContainer);
     };
 
     init.call(this);

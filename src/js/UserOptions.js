@@ -88,11 +88,13 @@ memoryCardGame.UserOptions = function (params) {
         rootNode.append(cardTemeText);
 
         for (var i = 0; i < config.cardThemesList.length; i++) {
-            var option = $('<label><input name="theme" type="radio"></label>');
+            var optionWrapper = $('<label class="themeOption"></label>');
+            var option = $('<input name="theme" type="radio">');
             var cardTheme = config.cardThemesList[i];
             option.val(cardTheme);
-            option.text(cardTheme.toUpperCase());
-            rootNode.append(option);
+            optionWrapper.text(cardTheme);
+            optionWrapper.prepend(option);
+            rootNode.append(optionWrapper);
         }
     };
 
@@ -102,6 +104,7 @@ memoryCardGame.UserOptions = function (params) {
      * @fires chosenOptions
      */
     var drawFooter = function (rootNode) {
+        var footerContainer = $('<div></div>');
         var closeButton = $('<button></button>').text(CONST.TEXT.CLOSE);
         closeButton.click(function () {
             self.container.hide();
@@ -110,7 +113,8 @@ memoryCardGame.UserOptions = function (params) {
                 selectedTheme: selectedTheme
             });
         });
-        rootNode.append(closeButton);
+        footerContainer.append(closeButton);
+        rootNode.append(footerContainer);
     };
 
     init.call(this);

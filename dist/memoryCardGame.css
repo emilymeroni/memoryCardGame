@@ -398,6 +398,9 @@ th {
   height: 100%;
   width: 100%; }
 
+.themeOption {
+  text-transform: capitalize; }
+
 .user-options-wrapper {
   background-color: rgba(0, 0, 0, 0.7);
   height: 100%;

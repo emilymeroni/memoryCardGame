@@ -79,9 +79,10 @@ memoryCardGame.GameManager = function (params) {
 
     var init = function () {
         cardThemesData = getCardThemesData();
-        var cardThemesList = getCardThemesList();
 
-        var userOptions = new memoryCardGame.UserOptions(cardThemesList);
+        var userOptions = new memoryCardGame.UserOptions({
+            cardThemesList: Object.keys(cardThemesData),
+        });
         userOptions.addObserver(self);
         self.container.append(userOptions.container);
         config.rootNode.append(self.container);
@@ -91,25 +92,21 @@ memoryCardGame.GameManager = function (params) {
      * Gets all the available card themes with their respective cards
      */
     var getCardThemesData = function () {
+
+        var cardThemesJson;
         $.ajax({
             type: 'POST',
             url: CONST.DATA.URL,
-            async: true,
-            success: function(cardThemesJson) {
-                return cardThemesJson;
+            async: false,
+            success: function(data) {
+                cardThemesJson = data;
             },
             error: function() {
                 console.log('could not load data');
             }
         });
-    };
 
-    var getCardThemesList = function () {
-        var cardThemesList = [];
-        $.each(cardThemesData, function (key, val) {
-            cardThemesList.push(val);
-        });
-        return cardThemesList;
+        return cardThemesJson;
     };
 
     /**
