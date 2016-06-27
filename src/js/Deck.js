@@ -1,3 +1,19 @@
+/**
+ * Deck widget
+ *
+ * The deck widget creates a deck of shuffled cars.
+ *
+ * @param {json} cardList   The cards of a selected theme
+ * @constructor
+ * @extends luga.notifier
+ *
+ * @fires handFinished
+ * @fires handInvalid
+ * @fires cardsAllFlipped
+ *
+ * @listens selectedCard
+ */
+
 memoryCardGame.Deck = function (params) {
 
     'use strict';
@@ -29,12 +45,24 @@ memoryCardGame.Deck = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {Array}
+     */
     var cards = [];
 
+    /**
+     * @type {Array}
+     */
     var flippedCards = [];
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.Deck}
+     */
     var self = this;
 
     var init = function () {
@@ -100,6 +128,14 @@ memoryCardGame.Deck = function (params) {
         }, CONST.TIME_FOR_FLIP);
     };
 
+    /**
+     * Listens to the "selectedCard" event notifications broadcast by the Card
+     * @param {memoryCardGame.Card} data.card
+     *
+     * @fires handFinished
+     * @fires handInvalid
+     * @fires cardsAllFlipped
+     */
     this.onSelectedCardHandler = function (data) {
         var card = data.card;
         flippedCards.push(card);
