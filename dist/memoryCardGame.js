@@ -28,6 +28,22 @@ window.memoryCardGame.utils = {};
     };
 })();
 
+/**
+ * Deck widget
+ *
+ * The deck widget creates a deck of shuffled cars.
+ *
+ * @param {json} cardList   The cards of a selected theme
+ * @constructor
+ * @extends luga.notifier
+ *
+ * @fires handFinished
+ * @fires handInvalid
+ * @fires cardsAllFlipped
+ *
+ * @listens selectedCard
+ */
+
 memoryCardGame.Deck = function (params) {
 
     'use strict';
@@ -59,12 +75,24 @@ memoryCardGame.Deck = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {Array}
+     */
     var cards = [];
 
+    /**
+     * @type {Array}
+     */
     var flippedCards = [];
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $(CONST.HTML.DECK).addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.Deck}
+     */
     var self = this;
 
     var init = function () {
@@ -130,6 +158,14 @@ memoryCardGame.Deck = function (params) {
         }, CONST.TIME_FOR_FLIP);
     };
 
+    /**
+     * Listens to the "selectedCard" event notifications broadcast by the Card
+     * @param {memoryCardGame.Card} data.card
+     *
+     * @fires handFinished
+     * @fires handInvalid
+     * @fires cardsAllFlipped
+     */
     this.onSelectedCardHandler = function (data) {
         var card = data.card;
         flippedCards.push(card);
@@ -155,6 +191,21 @@ memoryCardGame.Deck = function (params) {
 
 };
 
+
+/**
+ * Card widget
+ *
+ * The card widget creates cards with an image
+ *
+ * @param {number} id       The id of the card
+ * @param {boolean} flipped The state indicating wether the card is flipped or not
+ * @param {string} image    the path to the image
+ *
+ * @constructor
+ * @extends luga.Notifier
+ *
+ * @fires selectedCard
+ */
 
 memoryCardGame.Card = function (params) {
     'use strict';
@@ -186,12 +237,24 @@ memoryCardGame.Card = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {boolean}
+     */
     var discovered = false;
 
+    /**
+     * @type {HTMLElement}
+     */
     var imageNode = $(CONST.HTML.IMAGE_NODE);
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $(CONST.HTML.CARD_NODE).addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.Card}
+     */
     var self = this;
 
     var init = function () {
@@ -199,19 +262,24 @@ memoryCardGame.Card = function (params) {
         attachEvents();
     };
 
+    /**
+     * @fires selectedCard
+     */
     var attachEvents = function () {
         self.container.click(function () {
             if (config.flipped === false) {
                 flip(self.container);
-                if (discovered === false) {
-                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
-                        card: self
-                    });
-                }
+                self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
+                    card: self
+                });
             }
         });
     };
 
+
+    /**
+     * @param {HTMLElement}
+     */
     var flip = function (cardNode) {
         config.flipped = !config.flipped;
 

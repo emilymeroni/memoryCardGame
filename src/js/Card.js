@@ -1,3 +1,18 @@
+/**
+ * Card widget
+ *
+ * The card widget creates cards with an image
+ *
+ * @param {number} id       The id of the card
+ * @param {boolean} flipped The state indicating wether the card is flipped or not
+ * @param {string} image    the path to the image
+ *
+ * @constructor
+ * @extends luga.Notifier
+ *
+ * @fires selectedCard
+ */
+
 memoryCardGame.Card = function (params) {
     'use strict';
 
@@ -28,12 +43,24 @@ memoryCardGame.Card = function (params) {
     // Merge incoming params with internal config
     $.extend(config, params);
 
+    /**
+     * @type {boolean}
+     */
     var discovered = false;
 
+    /**
+     * @type {HTMLElement}
+     */
     var imageNode = $(CONST.HTML.IMAGE_NODE);
 
+    /**
+     * @type {jQuery}
+     */
     this.container = $(CONST.HTML.CARD_NODE).addClass(CONST.CSS.ROOT);
 
+    /**
+     * @type {memoryCardGame.Card}
+     */
     var self = this;
 
     var init = function () {
@@ -41,19 +68,24 @@ memoryCardGame.Card = function (params) {
         attachEvents();
     };
 
+    /**
+     * @fires selectedCard
+     */
     var attachEvents = function () {
         self.container.click(function () {
             if (config.flipped === false) {
                 flip(self.container);
-                if (discovered === false) {
-                    self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
-                        card: self
-                    });
-                }
+                self.notifyObservers(CONST.EVENT.SELECTED_CARD, {
+                    card: self
+                });
             }
         });
     };
 
+
+    /**
+     * @param {HTMLElement}
+     */
     var flip = function (cardNode) {
         config.flipped = !config.flipped;
 
