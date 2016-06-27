@@ -82,8 +82,8 @@ memoryCardGame.Card = function (params) {
         });
     };
 
-
     /**
+     * When the card is facing upwards it must show the associated image to it
      * @param {HTMLElement}
      */
     var flip = function (cardNode) {
