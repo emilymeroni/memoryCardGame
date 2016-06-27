@@ -71,6 +71,9 @@ memoryCardGame.Deck = function (params) {
         drawCards();
     };
 
+    /**
+     * Creates all the cards that are part of the deck by also creating the correct amount of duplicates.
+     */
     var setupCards = function () {
         $.each(config.cardList, function (key, val) {
             for (var j = 0; j < CONST.CARD_COPIES; j++) {
@@ -97,22 +100,42 @@ memoryCardGame.Deck = function (params) {
         }
     };
 
+    /**
+     * Gets the card that has previously been flipped
+     * @returns {memoryCardGame.Card}
+     */
     var getPreviousFlippedCard = function () {
         return flippedCards[flippedCards.length - 2];
     };
 
+    /**
+     * Detects when the user has just started a new hand. There is only one card flipped, thus there are no cards
+     * to be compared with it.
+     * @returns {boolean}
+     */
     var isNewHandStarted = function () {
         return flippedCards.length % CONST.CARD_COPIES === 1;
     };
 
+    /**
+     * Detects when the the user has selected the correct amount of cards to finish a hand of the game
+     * @returns {boolean}
+     */
     var isHandFinished = function () {
         return flippedCards.length % CONST.CARD_COPIES === 0;
     };
 
+    /**
+     * Detects when all the cards on the board have been discovered and flipped
+     * @returns {boolean}
+     */
     var isAllCardsFlipped = function () {
         return flippedCards.length === cards.length;
     };
 
+    /**
+     * Sets all the cards of the current hand as discovered
+     */
     var setDiscoveredCards = function () {
         for (var i = 1; i <= CONST.CARD_COPIES; i++) {
             flippedCards[flippedCards.length - i].setDiscovered();
@@ -137,12 +160,12 @@ memoryCardGame.Deck = function (params) {
      * @fires cardsAllFlipped
      */
     this.onSelectedCardHandler = function (data) {
-        var card = data.card;
-        flippedCards.push(card);
+        var currentCard = data.card;
+        flippedCards.push(currentCard);
         if (isNewHandStarted()) {
             return;
         }
-        if (getPreviousFlippedCard().getImage() === card.getImage()) {
+        if (getPreviousFlippedCard().getImage() === currentCard.getImage()) {
             if (isHandFinished()) {
                 setDiscoveredCards();
                 self.notifyObservers(CONST.EVENT.HAND_FINISHED, {});
